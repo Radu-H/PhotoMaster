@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project", "Project\Project.csproj", "{6575B48F-672F-42DE-89C2-11DDFCBE14C0}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "PhotoMaster Installer", "PhotoMaster Installer\PhotoMaster Installer.vdproj", "{EC52993C-9939-4A55-A089-3CD8B4FB9FE4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6575B48F-672F-42DE-89C2-11DDFCBE14C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6575B48F-672F-42DE-89C2-11DDFCBE14C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6575B48F-672F-42DE-89C2-11DDFCBE14C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6575B48F-672F-42DE-89C2-11DDFCBE14C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC52993C-9939-4A55-A089-3CD8B4FB9FE4}.Debug|Any CPU.ActiveCfg = Debug
+		{EC52993C-9939-4A55-A089-3CD8B4FB9FE4}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://darkdeveloping.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Project\\Project.csproj
+		SccProjectName1 = Project
+		SccLocalPath1 = Project
+		SccProjectUniqueName2 = PhotoMaster\u0020Installer\\PhotoMaster\u0020Installer.vdproj
+		SccProjectName2 = PhotoMaster\u0020Installer
+		SccLocalPath2 = PhotoMaster\u0020Installer
+	EndGlobalSection
+EndGlobal
