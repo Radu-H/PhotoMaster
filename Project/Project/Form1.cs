@@ -42,7 +42,7 @@ namespace Project
         Bitmap copiedImage;
 
         double multiplier = 1.2;
-        public displayPanel display;
+        public DisplayPanel display;
         public PictureBox workArea;
         public PictureBox selectionBox;
         public Panel toolBox;
@@ -59,7 +59,7 @@ namespace Project
 
         delegate void threadBoolCallback(bool active);
 
-        public bool selectingActive
+        public bool SelectingActive
         {
             get { return _selectingActive; }
             set
@@ -67,21 +67,21 @@ namespace Project
                 _selectingActive = value;
                 if (_selectingActive)
                 {
-                    this.menuStripItemEnable(true);
+                    this.MenuStripItemEnable(true);
                 }
                 else
                 {
-                    this.menuStripItemEnable(false);
+                    this.MenuStripItemEnable(false);
                     toolBox.Controls[0].BackColor = toolBox.Controls[3].BackColor = idleColor;
                 }
             }
         }
 
-        private void menuStripItemEnable(bool active)
+        private void MenuStripItemEnable(bool active)
         {
             if (this.menuStrip1.InvokeRequired)
             {
-                threadBoolCallback callbk = new threadBoolCallback(menuStripItemEnable);
+                threadBoolCallback callbk = new threadBoolCallback(MenuStripItemEnable);
                 this.Invoke(callbk, new object[] { active });
             }
             else
@@ -97,30 +97,34 @@ namespace Project
         {
             InitializeComponent();
 
-            Application.ThreadException += reportCrash;
-            AppDomain.CurrentDomain.UnhandledException += reportCrash;
+            Application.ThreadException += ReportCrash;
+            AppDomain.CurrentDomain.UnhandledException += ReportCrash;
 
             //picturebox
-            workArea = new PictureBox();
-            workArea.Size = new Size(450, 450);
-            workArea.Location = Point.Empty;
-            workArea.SizeMode = PictureBoxSizeMode.Zoom;
-            workArea.BackColor = Color.Transparent;
-            workArea.Visible = false;
-            workArea.MouseWheel += new System.Windows.Forms.MouseEventHandler(pictureBox1_Wheel);
-            workArea.SizeChanged += new System.EventHandler(workArea_Size);
+            workArea = new PictureBox
+            {
+                Size = new Size(450, 450),
+                Location = Point.Empty,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                BackColor = Color.Transparent,
+                Visible = false
+            };
+            workArea.MouseWheel += new System.Windows.Forms.MouseEventHandler(PictureBox1_Wheel);
+            workArea.SizeChanged += new System.EventHandler(WorkArea_Size);
 
 
             //display panel
-            display = new displayPanel();
-            display.Location = new Point(53, 42);
+            display = new DisplayPanel
+            {
+                Location = new Point(53, 42)
+            };
             this.Controls.Add(display);
             display.BackColor = Color.DarkGray;
             display.AutoScroll = true;
             display.Size = new Size(490, 490);
-            display.Resize += new System.EventHandler(panel1_Resize);
+            display.Resize += new System.EventHandler(Panel1_Resize);
             //display.MouseLeave += new EventHandler(properties_MouseLeave);
-            workArea.MouseEnter += new EventHandler(properties_MouseEnter);
+            workArea.MouseEnter += new EventHandler(Properties_MouseEnter);
             display.Controls.Add(workArea);
 
 
@@ -131,7 +135,7 @@ namespace Project
             toolBox.BackColor = Color.Transparent;
             toolBox.Location = new Point(5, display.Location.Y);
             toolBox.Size = new Size(display.Left - 10, display.ClientSize.Height);
-            generateToolBox();
+            GenerateToolBox();
 
             //toolBar
             toolBar = new Panel();
@@ -142,23 +146,24 @@ namespace Project
             toolBar.Size = new Size(display.Width, 34);
 
             //selection box
-            selectionBox = new PictureBox();
-
-            selectionBox.Size = workArea.Size;
-            selectionBox.Location = Point.Empty;
-            selectionBox.BackColor = Color.Transparent;
-            selectionBox.Enabled = false;
+            selectionBox = new PictureBox
+            {
+                Size = workArea.Size,
+                Location = Point.Empty,
+                BackColor = Color.Transparent,
+                Enabled = false
+            };
             workArea.Controls.Add(selectionBox);
-            selectionBox.MouseDown += new MouseEventHandler(selectionBox_MouseDown);
-            selectionBox.MouseUp += new MouseEventHandler(selectionBox_MouseUp);
-            selectionBox.MouseMove += new MouseEventHandler(selectionBox_Move);
+            selectionBox.MouseDown += new MouseEventHandler(SelectionBox_MouseDown);
+            selectionBox.MouseUp += new MouseEventHandler(SelectionBox_MouseUp);
+            selectionBox.MouseMove += new MouseEventHandler(SelectionBox_Move);
 
             //properties panel
             properties = new Panel();
             this.Controls.Add(properties);
             properties.Visible = false;
-            properties.MouseEnter += new EventHandler(properties_MouseEnter);
-            properties.MouseLeave += new EventHandler(properties_MouseLeave);
+            properties.MouseEnter += new EventHandler(Properties_MouseEnter);
+            properties.MouseLeave += new EventHandler(Properties_MouseLeave);
 
             //timer , stopwatch
             timerMove = new Stopwatch();
@@ -169,34 +174,38 @@ namespace Project
             menuStrip1.BackColor = Color.FromArgb(92, 139, 139);
         }
 
-        private void reportCrash(object sender, ThreadExceptionEventArgs e)
+        private void ReportCrash(object sender, ThreadExceptionEventArgs e)
         {
-            reviewForm(e.Exception.ToString());
+            ReviewForm(e.Exception.ToString());
             Application.Exit();
         }
-        private void reportCrash(object sender, UnhandledExceptionEventArgs e)
+        private void ReportCrash(object sender, UnhandledExceptionEventArgs e)
         {
-            reviewForm(e.ExceptionObject.ToString());
+            ReviewForm(e.ExceptionObject.ToString());
             Environment.Exit(0);
         }
 
-        private void sendReport(string message, string subject)
+        private void SendReport(string message, string subject)
         {
             string from = "developingsoftware01@gmail.com";
             string pass = "C#ForTheWin";
 
-            SmtpClient client = new SmtpClient();
-            client.Port = 587;
-            client.Host = "smtp.gmail.com";
-            client.EnableSsl = true;
-            client.Timeout = 10000;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new System.Net.NetworkCredential(from, pass);
+            SmtpClient client = new SmtpClient
+            {
+                Port = 587,
+                Host = "smtp.gmail.com",
+                EnableSsl = true,
+                Timeout = 10000,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new System.Net.NetworkCredential(from, pass)
+            };
 
-            MailMessage sendmail = new MailMessage();
-            sendmail.IsBodyHtml = false;
-            sendmail.From = new MailAddress("developingsoftware01@gmail.com", "Program");
+            MailMessage sendmail = new MailMessage
+            {
+                IsBodyHtml = false,
+                From = new MailAddress("developingsoftware01@gmail.com", "Program")
+            };
             sendmail.To.Add(new MailAddress("DraekorProjects@gmail.com"));
             sendmail.Subject = subject;
             sendmail.Body = message;
@@ -204,39 +213,43 @@ namespace Project
             client.Send(sendmail);
         }
 
-        private void reviewForm()
+        private void ReviewForm()
         {
             // Form f = popForm("Feedback/ Bug Report", 500, 700);
-            Form f = new Form();
-            f.Text = "Feedback/ Bug Report";
-            f.Size = new Size(500, 700);
+            Form f = new Form
+            {
+                Text = "Feedback/ Bug Report",
+                Size = new Size(500, 700)
+            };
+
+            Label name_lb = PopLabel(150, 50, "Display name: ", f);
+            System.Windows.Forms.TextBox name = PopText(250, 50, f);
+            Label message_lb = PopLabel(150, 100, "Please give us your feedback:", f);
+            RichTextBox message = PopRichText(100, 130, 300, 400, f);
+            Button bt = PopButton(200, 550, "Send", f);
             
-            Label name_lb = popLabel(150, 50, "Display name: ", f);
-            TextBox name = popText(250, 50, f);
-            Label message_lb = popLabel(150, 100, "Please give us your feedback:", f);
-            RichTextBox message = popRichText(100, 130, 300, 400, f);
-            Button bt = popButton(200, 550, "Send", f);
-            
-            bt.Click += new EventHandler(sendFeedback);
+            bt.Click += new EventHandler(SendFeedback);
 
             f.ShowDialog();
         }
-        private void reviewForm(object exception)
+        private void ReviewForm(object exception)
         {
-            Form f = new Form();
-            f.Text = "Crash Report";
-            f.Size = new Size(500, 700);
-            Label name_lb = popLabel(150, 50, "Display name: ", f);
-            TextBox name = popText(250, 50, f);
-            Label message_lb = popLabel(100, 100, "Please describe what were you doing when the crash occured:", f);
-            RichTextBox message = popRichText(100, 130, 300, 400, f);
-            Button bt = popButton(200, 550, "Send", f);
+            Form f = new Form
+            {
+                Text = "Crash Report",
+                Size = new Size(500, 700)
+            };
+            Label name_lb = PopLabel(150, 50, "Display name: ", f);
+            System.Windows.Forms.TextBox name = PopText(250, 50, f);
+            Label message_lb = PopLabel(100, 100, "Please describe what were you doing when the crash occured:", f);
+            RichTextBox message = PopRichText(100, 130, 300, 400, f);
+            Button bt = PopButton(200, 550, "Send", f);
 
-            bt.Click += (sender, e) => { sendBug(sender, e, (string)exception); };
+            bt.Click += (sender, e) => { SendBug(sender, e, (string)exception); };
             f.ShowDialog();
         }
 
-        private void sendBug(object sender, EventArgs e, string exception)
+        private void SendBug(object sender, EventArgs e, string exception)
         {
             string message = "Report sent by:   ";
             message += ((Button)sender).FindForm().Controls[1].Text + "\n\n";
@@ -244,40 +257,40 @@ namespace Project
             message += ((Button)sender).FindForm().Controls[3].Text + "\n\n";
             message += "Exception:\n" + exception;
 
-            sendReport(message, "Crash report");
+            SendReport(message, "Crash report");
 
             ((Button)sender).FindForm().Close();
         }
 
-        private void sendFeedback(object sender, EventArgs e)
+        private void SendFeedback(object sender, EventArgs e)
         {
             string message = "Report sent by:   ";
             message += ((Button)sender).FindForm().Controls[1].Text + "\n\n";
             message += "User's message:\n";
             message += ((Button)sender).FindForm().Controls[3].Text;
 
-            sendReport(message, "User's report");
+            SendReport(message, "User's report");
 
             ((Button)sender).FindForm().Close();
         }
 
-        private void properties_MouseEnter(object sender, EventArgs e)
+        private void Properties_MouseEnter(object sender, EventArgs e)
         {
             if (index > -1)
-                if (elements[index].GetType().Equals(typeof(textBox)))
-                    ((textBox)elements[index]).raiseEventsStatus(true);
+                if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+                    ((TextBoxTool)elements[index]).RaiseEventsStatus(true);
         }
 
-        private void properties_MouseLeave(object sender, EventArgs e)
+        private void Properties_MouseLeave(object sender, EventArgs e)
         {
             if (index > -1)
-                if (elements[index].GetType().Equals(typeof(textBox)))
-                    ((textBox)elements[index]).raiseEventsStatus(false);
+                if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+                    ((TextBoxTool)elements[index]).RaiseEventsStatus(false);
         }
 
-        private void workArea_Size(object sender, EventArgs e)
+        private void WorkArea_Size(object sender, EventArgs e)
         {
-            if (selectingActive == true)
+            if (SelectingActive == true)
             {
                 if (selectionBox.Size.Width > workArea.Size.Width)
                 {
@@ -292,15 +305,15 @@ namespace Project
                     selectEnd = new Point((int)(originalSelectEnd.X * Math.Pow(multiplier, selectZoomCount)), (int)(originalSelectEnd.Y * Math.Pow(multiplier, selectZoomCount)));
                 }
                 selectionBox.Size = workArea.Size;
-                if (selectingActive == true)
+                if (SelectingActive == true)
                 {
-                    selectingActive = false;
+                    SelectingActive = false;
                     if (selecting.IsAlive == true)
                     {
                         selectionBox.Invalidate();
                         Thread.Sleep(3);
                     }
-                    selecting = new Thread(drawSelectionThread);
+                    selecting = new Thread(DrawSelectionThread);
                     selecting.Start();
                 }
             }
@@ -343,13 +356,13 @@ namespace Project
             //}
         }
 
-        private void selectionBox_MouseDown(object sender, MouseEventArgs e)
+        private void SelectionBox_MouseDown(object sender, MouseEventArgs e)
         {
             selectionBox.Size = workArea.Size;
             selectZoomCount = 0;
-            if (selectingActive == true)
+            if (SelectingActive == true)
             {
-                selectingActive = false;
+                SelectingActive = false;
             }
             if (drawingActive == true)
             {
@@ -360,10 +373,10 @@ namespace Project
             originalSelectStart = selectStart = e.Location;
             selectEnd = new Point(-1, -1);
             selectionBox.Invalidate();
-            textBoxRefresh();
+            TextBoxRefresh();
         }
 
-        private Rectangle createRectangle(Point start, Point end)
+        private Rectangle CreateRectangle(Point start, Point end)
         {
             Rectangle r = new Rectangle();
 
@@ -390,55 +403,58 @@ namespace Project
             return r;
         }
 
-        private void drawSelection(Point start, Point end)
+        private void DrawSelection(Point start, Point end)
         {
-            Rectangle r = createRectangle(start, end);
+            Rectangle r = CreateRectangle(start, end);
 
             Graphics g = selectionBox.CreateGraphics();
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Pen p = new Pen(Brushes.Aquamarine);
-
-            p.DashStyle = DashStyle.DashDot;
+            Pen p = new Pen(Brushes.Aquamarine)
+            {
+                DashStyle = DashStyle.DashDot
+            };
             if (mod == 0)
                 g.DrawRectangle(p, r);
             if (mod == 3)
                 g.DrawEllipse(p, r);
         }
 
-        private void drawRectangle(Point start, Point end)
+        private void DrawRectangle(Point start, Point end)
         {
-            Rectangle r = createRectangle(selectStart, selectEnd);
+            Rectangle r = CreateRectangle(selectStart, selectEnd);
 
             Graphics g = selectionBox.CreateGraphics();
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Pen p = new Pen(Brushes.Black);
-
-            p.DashStyle = DashStyle.Solid;
+            Pen p = new Pen(Brushes.Black)
+            {
+                DashStyle = DashStyle.Solid
+            };
             g.DrawRectangle(p, r);
             g.FillRectangle(Brushes.Black, r);
         }
 
-        private void drawEllipse(Point start,Point end)
+        private void DrawEllipse(Point start,Point end)
         {
-            Rectangle r = createRectangle(selectStart, selectEnd);
+            Rectangle r = CreateRectangle(selectStart, selectEnd);
 
             Graphics g = selectionBox.CreateGraphics();
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Pen p = new Pen(Brushes.Black);
-
-            p.DashStyle = DashStyle.Solid;
+            Pen p = new Pen(Brushes.Black)
+            {
+                DashStyle = DashStyle.Solid
+            };
             g.DrawEllipse(p, r);
             g.FillEllipse(Brushes.Black, r);
         }
 
-        private void drawSelectionThread()
+        private void DrawSelectionThread()
         {
-            selectingActive = true;
+            SelectingActive = true;
 
-            Rectangle r = createRectangle(selectStart, selectEnd);
+            Rectangle r = CreateRectangle(selectStart, selectEnd);
 
             Graphics g = selectionBox.CreateGraphics();
             Pen p = new Pen(Brushes.Aquamarine);
@@ -465,31 +481,32 @@ namespace Project
                
                 Thread.Sleep(1);
                
-            } while (selectingActive);
+            } while (SelectingActive);
 
             selectionBox.Invalidate();
-            textBoxRefreshThread();
+            TextBoxRefreshThread();
         }
 
-        private void drawRectangleThread()
+        private void DrawRectangleThread()
         {
             drawingActive = true;
 
-            Rectangle r = createRectangle(selectStart, selectEnd);
+            Rectangle r = CreateRectangle(selectStart, selectEnd);
 
             Graphics g = selectionBox.CreateGraphics();
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Pen p = new Pen(Brushes.Black);
-
-            p.DashStyle = DashStyle.Solid;
+            Pen p = new Pen(Brushes.Black)
+            {
+                DashStyle = DashStyle.Solid
+            };
             g.DrawRectangle(p, r);
             g.FillRectangle(Brushes.Black, r);
 
             //selectionBox.Refresh();
         }
 
-        private void selectionBox_Move(object sender, MouseEventArgs e)
+        private void SelectionBox_Move(object sender, MouseEventArgs e)
         {
             Point selectCurrent = new Point(e.Location.X, e.Location.Y);
 
@@ -502,40 +519,40 @@ namespace Project
                     case 3:
                         if (selectEnd.X != -1)
                         {
-                            drawSelection(selectStart, selectEnd);
+                            DrawSelection(selectStart, selectEnd);
                         }
                         originalSelectEnd = selectEnd = selectCurrent;
-                        drawSelection(selectStart, selectCurrent);
+                        DrawSelection(selectStart, selectCurrent);
                         break;
                     case 2:
                         if (selectEnd.X != -1)
                         {
-                            drawRectangle(selectStart, selectEnd);
+                            DrawRectangle(selectStart, selectEnd);
                         }
                         originalSelectEnd = selectEnd = selectCurrent;
-                        drawRectangle(selectStart, selectCurrent);
+                        DrawRectangle(selectStart, selectCurrent);
                         break;
                     case 4:
                         if(selectEnd.X!=-1)
                         {
-                            drawEllipse(selectStart, selectEnd);
+                            DrawEllipse(selectStart, selectEnd);
                         }
                         originalSelectEnd = selectEnd = selectCurrent;
-                        drawEllipse(selectStart, selectEnd);
+                        DrawEllipse(selectStart, selectEnd);
                         break;
                 }
                 selectionBox.Invalidate();
                 Application.DoEvents();
-                textBoxRefresh();
+                TextBoxRefresh();
             }
         }
 
-        private void selectionBox_MouseUp(object sender, MouseEventArgs e)
+        private void SelectionBox_MouseUp(object sender, MouseEventArgs e)
         {
             mouseDown = false;
             if (toolBox.Controls[1].BackColor != activeColor && mod!=2 && mod!=4)
             {
-                selecting = new Thread(drawSelectionThread);
+                selecting = new Thread(DrawSelectionThread);
                 if (selectEnd.X != -1)
                 {
                     selecting.Start();
@@ -547,9 +564,9 @@ namespace Project
                 {
                     case 1:
                         {
-                            textBox txtbox = new textBox(createRectangle(selectStart, selectEnd), workArea);
-                            txtbox.Click += new EventHandler(object_Click);
-                            addElement(txtbox);
+                            TextBoxTool txtbox = new TextBoxTool(CreateRectangle(selectStart, selectEnd), workArea);
+                            txtbox.Click += new EventHandler(Object_Click);
+                            AddElement(txtbox);
                             break;
                         }
                     /*
@@ -568,10 +585,10 @@ namespace Project
                             //rectangle.Location = new Point(r.X + workArea.Left, r.Y + workArea.Top);
 
                             DrawRectangle rectangle = new DrawRectangle(selectStart, selectEnd, display);
-                            rectangle.MouseDown += new MouseEventHandler(object_Click);
+                            rectangle.MouseDown += new MouseEventHandler(Object_Click);
                             //setRectangleColor(Color.Black, rectangle);
 
-                            addElement(rectangle);
+                            AddElement(rectangle);
                             //this.Controls[4].Controls.Clear();
                             //rectangleProperties();
 
@@ -585,16 +602,16 @@ namespace Project
                     case 4:
                         {
                             DrawEllipse ellipse = new DrawEllipse(selectStart, selectEnd, display);
-                            ellipse.MouseDown += new MouseEventHandler(object_Click);
-                            addElement(ellipse);
+                            ellipse.MouseDown += new MouseEventHandler(Object_Click);
+                            AddElement(ellipse);
                             break;
                         }
                 }
-                deactivateTools();
+                DeactivateTools();
             }
         }
 
-        private void setRectangleColor(Color col, PictureBox rectangle)
+        private void SetRectangleColor(Color col, PictureBox rectangle)
         {
             Bitmap bmp = new Bitmap(rectangle.Width, rectangle.Height);
             using (Graphics g = Graphics.FromImage(bmp))
@@ -606,7 +623,7 @@ namespace Project
             rectangle.Image = bmp;
         }
 
-        private void rectangle_SizeChanged(object sender, EventArgs e)
+        private void Rectangle_SizeChanged(object sender, EventArgs e)
         {
             //schimba height
             this.Controls[4].Controls[1].Text = elements[index].Height.ToString();
@@ -614,22 +631,22 @@ namespace Project
             this.Controls[4].Controls[3].Text = elements[index].Width.ToString();
         }
 
-        private void rectangle_MouseClick(object sender, MouseEventArgs e)
+        private void Rectangle_MouseClick(object sender, MouseEventArgs e)
         {
             ((Control)sender).Focus();
             this.Controls[4].Controls.Clear();
-            rectangleProperties();
+            RectangleProperties();
         }
 
 
-        private void pictureBox1_Wheel(object sender, MouseEventArgs e)
+        private void PictureBox1_Wheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
             {
                 if (zoomCount < 25)
                 {
                     zoomCount++;
-                    zoomIn(e.Location);
+                    ZoomIn(e.Location);
                 }
             }
             else
@@ -637,13 +654,13 @@ namespace Project
                 if (zoomCount > -15 && (workArea.Width >= 48 || workArea.Height >= 48))
                 {
                     zoomCount--;
-                    zoomOut(e.Location);
+                    ZoomOut(e.Location);
                 }
             }
-            display_update_background();
+            Display_update_background();
         }
 
-        void initialise_workArea()
+        void Initialise_workArea()
         {
             Bitmap drawarea = new Bitmap(workArea.Size.Width, workArea.Size.Height);
             workArea.Image = drawarea;
@@ -655,76 +672,76 @@ namespace Project
             }
         }
 
-        void message(string x)
+        void Message(string x)
         {
             MessageBox.Show(x);
         }
 
-        private void generateToolBox()
+        private void GenerateToolBox()
         {
-            Button select = createTool(toolBox.Location.X, 5, toolBox);
+            Button select = CreateTool(toolBox.Location.X, 5, toolBox);
             toolTip.SetToolTip(select, "Selection Tool");
             select.BackgroundImage = Properties.Resources.Selection;
             toolBox.Enabled = false;
 
-            Button textbox = createTool(toolBox.Location.X, 40, toolBox);
+            Button textbox = CreateTool(toolBox.Location.X, 40, toolBox);
             toolTip.SetToolTip(textbox, "Text Box");
             textbox.BackgroundImage = Resources.Text;
 
-            Button rectangle = createTool(toolBox.Location.X, 75, toolBox);
+            Button rectangle = CreateTool(toolBox.Location.X, 75, toolBox);
             toolTip.SetToolTip(rectangle, "Rectangle Tool");
             rectangle.BackgroundImage = Resources.Rectangle_inactive;
 
-            Button circSelect = createTool(toolBox.Location.X, 110, toolBox);
+            Button circSelect = CreateTool(toolBox.Location.X, 110, toolBox);
             toolTip.SetToolTip(circSelect, "Circular Select");
             //temp
             circSelect.BackgroundImage = Resources.Circle_active;
             //temp
 
-            Button ellipseDraw = createTool(toolBox.Location.X, 145, toolBox);
+            Button ellipseDraw = CreateTool(toolBox.Location.X, 145, toolBox);
             toolTip.SetToolTip(ellipseDraw, "Draw Ellipse");
             ellipseDraw.BackgroundImage = Resources.Circle_active;
         }
 
-        private void activateMode()
+        private void ActivateMode()
         {
-            deactivateAll();
+            DeactivateAll();
             switch (mod)
             {
-                case -1: deactivateAll(); break;
+                case -1: DeactivateAll(); break;
                 case 0:
-                case 3: activateSelect(true); break;
-                case 1: activateText(true); break;
-                case 2: activateRectangle(true); break;
-                case 4:activateEllipse(true);break;
+                case 3: ActivateSelect(true); break;
+                case 1: ActivateText(true); break;
+                case 2: ActivateRectangle(true); break;
+                case 4:ActivateEllipse(true);break;
                     
             }
-            textBoxRefresh();
+            TextBoxRefresh();
         }
 
-        private void deactivateAll()
+        private void DeactivateAll()
         {
-            activateSelect(false);
-            activateText(false);
-            if (selectingActive == true)
+            ActivateSelect(false);
+            ActivateText(false);
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
                 {
-                    selectingActive = false;
+                    SelectingActive = false;
                     selectionBox.Invalidate();
-                    textBoxRefresh();
+                    TextBoxRefresh();
                 }
         }
 
-        private void deactivateTools()
+        private void DeactivateTools()
         {
-            activateSelect(false);
-            activateText(false);
-            if (selectingActive == true)
+            ActivateSelect(false);
+            ActivateText(false);
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
                 {
-                    selectingActive = false;
+                    SelectingActive = false;
                     selectionBox.Invalidate();
-                    textBoxRefresh();
+                    TextBoxRefresh();
                 }
             foreach (Button bt in toolBox.Controls)
             {
@@ -733,34 +750,34 @@ namespace Project
             mod = -1;
         }
 
-        private void activateSelect(bool active)
+        private void ActivateSelect(bool active)
         {
             selectionBox.Enabled = active;
         }
 
-        private void activateText(bool active)
+        private void ActivateText(bool active)
         {
             selectionBox.Enabled = active;
         }
 
-        private void activateRectangle(bool active)
+        private void ActivateRectangle(bool active)
         {
             selectionBox.Enabled = active;
         }
 
-        private void activateEllipse(bool active)
+        private void ActivateEllipse(bool active)
         {
             selectionBox.Enabled = active;
         }
 
-        private void tool_Clicked(object sender, EventArgs e)
+        private void Tool_Clicked(object sender, EventArgs e)
         {
-            if (selectingActive == true)
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
                 {
-                    selectingActive = false;
+                    SelectingActive = false;
                     selectionBox.Invalidate();
-                    textBoxRefresh();
+                    TextBoxRefresh();
                 }
             if (((Button)sender).BackColor == activeColor)
             {
@@ -781,86 +798,94 @@ namespace Project
                     case 4: ((Button)sender).BackgroundImage = Resources.Circle_active; break;
                 }
             }
-            activateMode();
+            ActivateMode();
         }
         
-        private void rectangleProperties()
+        private void RectangleProperties()
         {
-            Label height = new Label();
-            height.Size = new Size(50, 30);
-            height.Text = "Height:";
+            Label height = new Label
+            {
+                Size = new Size(50, 30),
+                Text = "Height:"
+            };
             properties.Controls.Add(height);
 
-            TextBox heightText = new TextBox();
-            heightText.Size = new Size(50, 30);
-            heightText.Text = elements[index].Height.ToString();
-            heightText.Location = new Point(height.Location.X + height.Width + 5, height.Location.Y);
-            heightText.TextChanged += new EventHandler(heightText_TextChanged);
+            System.Windows.Forms.TextBox heightText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = elements[index].Height.ToString(),
+                Location = new Point(height.Location.X + height.Width + 5, height.Location.Y)
+            };
+            heightText.TextChanged += new EventHandler(HeightText_TextChanged);
             properties.Controls.Add(heightText);
 
-            Label width = new Label();
-            width.Size = new Size(50, 30);
-            width.Location = new Point(height.Location.X, height.Location.Y + height.Height + 5);
-            width.Text = "Width:";
+            Label width = new Label
+            {
+                Size = new Size(50, 30),
+                Location = new Point(height.Location.X, height.Location.Y + height.Height + 5),
+                Text = "Width:"
+            };
             properties.Controls.Add(width);
 
-            TextBox widthText = new TextBox();
-            widthText.Size = new Size(50, 30);
-            widthText.Text = elements[index].Width.ToString();
-            widthText.Location = new Point(width.Location.X + width.Width + 5, width.Height);
-            widthText.TextChanged += new EventHandler(widthText_TextChanged);
+            System.Windows.Forms.TextBox widthText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = elements[index].Width.ToString(),
+                Location = new Point(width.Location.X + width.Width + 5, width.Height)
+            };
+            widthText.TextChanged += new EventHandler(WidthText_TextChanged);
             properties.Controls.Add(widthText);
 
-            noFocusBorderButton colorSwitch = new noFocusBorderButton();
+            NoFocusBorderButton colorSwitch = new NoFocusBorderButton();
             properties.Controls.Add(colorSwitch);
             colorSwitch.BackColor = ((PictureBox)elements[index]).BackColor;
             colorSwitch.Size = new Size(30, 30);
             colorSwitch.Location = new Point(width.Location.X, width.Location.Y + width.Height + 5);
-            colorSwitch.Click += new EventHandler(color_Clicked);
+            colorSwitch.Click += new EventHandler(Color_Clicked);
         }
 
-        private void color_Clicked(object sender, EventArgs e)
+        private void Color_Clicked(object sender, EventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
             if (colorPicker.ShowDialog() == DialogResult.OK)
             {
                 ((Button)sender).BackColor = colorPicker.Color;
-                setRectangleColor(colorPicker.Color, (PictureBox)elements[index]);
+                SetRectangleColor(colorPicker.Color, (PictureBox)elements[index]);
                 
             }
         }
 
-        private void heightText_TextChanged(object sender, EventArgs e)
+        private void HeightText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                elements[index].Height = Convert.ToInt32(((TextBox)sender).Text);
+                elements[index].Height = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
             }
             catch(Exception )
             {
-                message("Invalid height! Try again.");
+                Message("Invalid height! Try again.");
             }
         }
 
-        private void widthText_TextChanged(object sender, EventArgs e)
+        private void WidthText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                elements[index].Width = Convert.ToInt32(((TextBox)sender).Text);
+                elements[index].Width = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
             }
             catch(Exception )
             {
-                message("Invalid width! Try again.");
+                Message("Invalid width! Try again.");
             }
         }
 
         delegate void threadtextboxRefresh();
 
-        private void textBoxRefreshThread()
+        private void TextBoxRefreshThread()
         {
            
                 bool invReq = false;
-                foreach(textBox elm in elements.OfType<textBox>())
+                foreach(TextBoxTool elm in elements.OfType<TextBoxTool>())
                     if(elm.InvokeRequired)
                     {
                         invReq = true;
@@ -868,12 +893,12 @@ namespace Project
                     }
                 if (invReq)
                 {
-                    threadtextboxRefresh callbk = new threadtextboxRefresh(textBoxRefreshThread);
+                    threadtextboxRefresh callbk = new threadtextboxRefresh(TextBoxRefreshThread);
                     this.Invoke(callbk);
                 }
                 else
                 {
-                    foreach (textBox obj in elements.OfType<textBox>())
+                    foreach (TextBoxTool obj in elements.OfType<TextBoxTool>())
                     {
                         obj.ForceRefresh();
                     }
@@ -881,29 +906,30 @@ namespace Project
             
         }
 
-        private void textBoxRefresh()
+        private void TextBoxRefresh()
         {
-            foreach (textBox obj in elements.OfType<textBox>())
+            foreach (TextBoxTool obj in elements.OfType<TextBoxTool>())
             {
                 obj.ForceRefresh();
             }
         }
 
-        private Button createTool(int x, int y, Control f)
+        private Button CreateTool(int x, int y, Control f)
         {
-            Button bt = new Button();
-
-            bt.Location = new Point(x, y);
-            bt.Size = new Size(toolBox.Width - 10, toolBox.Width - 10);
-            bt.MouseEnter += new EventHandler(tool_MouseEnter);
-            bt.MouseLeave += new EventHandler(tool_MouseLeave);
+            Button bt = new Button
+            {
+                Location = new Point(x, y),
+                Size = new Size(toolBox.Width - 10, toolBox.Width - 10)
+            };
+            bt.MouseEnter += new EventHandler(Tool_MouseEnter);
+            bt.MouseLeave += new EventHandler(Tool_MouseLeave);
             bt.BackColor = idleColor;
             bt.TabStop = false;
             bt.Padding = new Padding(5, 0, 5, 0);
             bt.FlatStyle = FlatStyle.Flat;
             bt.FlatAppearance.BorderSize = 0;
             bt.FlatAppearance.BorderColor = Color.FromArgb(0, 255, 255, 255);
-            bt.Click += new System.EventHandler(tool_Clicked);
+            bt.Click += new System.EventHandler(Tool_Clicked);
             f.Controls.Add(bt);
 
             return bt;
@@ -911,63 +937,75 @@ namespace Project
 
         #region POPCONTROLS
 
-        Form popForm(string txt)
+        Form PopForm(string txt)
         {
-            Form f = new Form();
-            f.Text = txt;
-            f.FormBorderStyle = FormBorderStyle.Fixed3D;
+            Form f = new Form
+            {
+                Text = txt,
+                FormBorderStyle = FormBorderStyle.Fixed3D
+            };
             f.Show();
 
             return f;
         }
 
-        Form popForm(string txt, int w, int h)
+        Form PopForm(string txt, int w, int h)
         {
-            Form f = new Form();
-            f.Text = txt;
-            f.Size = new Size(w, h);
+            Form f = new Form
+            {
+                Text = txt,
+                Size = new Size(w, h)
+            };
             f.Show();
 
             return f;
         }
 
-        Label popLabel(int x, int y, string txt, Form f)
+        Label PopLabel(int x, int y, string txt, Form f)
         {
-            Label lb = new Label();
-            lb.Location = new Point(x, y);
-            lb.Text = txt;
-            lb.AutoSize = true;
+            Label lb = new Label
+            {
+                Location = new Point(x, y),
+                Text = txt,
+                AutoSize = true
+            };
             f.Controls.Add(lb);
             return lb;
         }
 
-        TextBox popText(int x, int y, Form f)
+        TextBox PopText(int x, int y, Form f)
         {
-            TextBox t = new TextBox();
-            t.Location = new Point(x, y);
+            TextBox t = new TextBox
+            {
+                Location = new Point(x, y)
+            };
             f.Controls.Add(t);
             return t;
         }
 
-        RichTextBox popRichText(int x, int y, int w, int h, Form f)
+        RichTextBox PopRichText(int x, int y, int w, int h, Form f)
         {
-            RichTextBox t = new RichTextBox();
-            t.Location = new Point(x, y);
-            t.Size = new Size(w, h);
+            RichTextBox t = new RichTextBox
+            {
+                Location = new Point(x, y),
+                Size = new Size(w, h)
+            };
             f.Controls.Add(t);
             return t;
         }
 
-        Button popButton(int x, int y, string txt, Control f)
+        Button PopButton(int x, int y, string txt, Control f)
         {
-            Button bt = new Button();
-            bt.Location = new Point(x, y);
-            bt.Text = txt;
+            Button bt = new Button
+            {
+                Location = new Point(x, y),
+                Text = txt
+            };
             f.Controls.Add(bt);
             return bt;
         }
 
-        GroupBox popGrBox(int x, int y, string caption, List<string> buttons, Form f)
+        GroupBox PopGrBox(int x, int y, string caption, List<string> buttons, Form f)
         {
             GroupBox gb = new GroupBox();
             int i = 0;
@@ -975,13 +1013,14 @@ namespace Project
             gb.Text = caption;
             foreach (string s in buttons)
             {
-                RadioButton rb = new RadioButton();
+                RadioButton rb = new RadioButton
+                {
+                    Text = s,
 
-                rb.Text = s;
-
-                rb.Location = new Point(15, (i + 1) * 20);
+                    Location = new Point(15, (i + 1) * 20)
+                };
                 gb.Controls.Add(rb);
-                rb.Click += new System.EventHandler(saveType_Changed);
+                rb.Click += new System.EventHandler(SaveType_Changed);
                 i++;
                 if (i > 3)
                     gb.Height += 20;
@@ -998,56 +1037,60 @@ namespace Project
 
         #region NEW
 
-        private void newAction()
+        private void NewAction()
         {
             if (drag == true)
                 if (dragging.IsAlive == true)
                     drag = false;
 
-            deactivateTools();
+            DeactivateTools();
 
-            initialise_workArea();
+            Initialise_workArea();
 
-            Form newScreen = popForm("New", 400, 300);
+            Form newScreen = PopForm("New", 400, 300);
 
-            Label title_lb = popLabel(50, 50, "Project's Title", newScreen);
+            Label title_lb = PopLabel(50, 50, "Project's Title", newScreen);
 
-            TextBox title = popText(200, 50, newScreen);
+            System.Windows.Forms.TextBox title = PopText(200, 50, newScreen);
 
-            Label open_lb = popLabel(50, 100, "Open Picture (Optional)", newScreen);
+            Label open_lb = PopLabel(50, 100, "Open Picture (Optional)", newScreen);
 
-            Button browse = popButton(210, 95, "Browse", newScreen);
+            Button browse = PopButton(210, 95, "Browse", newScreen);
 
-            browse.Click += new System.EventHandler(browseClicked);
+            browse.Click += new System.EventHandler(BrowseClicked);
 
-            PictureBox thumbnail = new PictureBox();
-            thumbnail.Visible = false;
-            thumbnail.Location = new Point(85, 125);
-            thumbnail.SizeMode = PictureBoxSizeMode.Zoom;
-            thumbnail.Width = 50;
-            thumbnail.Height = 50;
+            PictureBox thumbnail = new PictureBox
+            {
+                Visible = false,
+                Location = new Point(85, 125),
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Width = 50,
+                Height = 50
+            };
 
             newScreen.Controls.Add(thumbnail);
 
-            Button create = popButton(100, 200, "Create", newScreen);
+            Button create = PopButton(100, 200, "Create", newScreen);
 
-            create.Click += new System.EventHandler(newOption_Clicked);
+            create.Click += new System.EventHandler(NewOption_Clicked);
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            newAction();
+            NewAction();
         }
 
-        private void browseClicked(object sender, EventArgs e)
+        private void BrowseClicked(object sender, EventArgs e)
         {
-            browseImage((PictureBox)((Button)sender).Parent.FindForm().Controls[4]);
+            BrowseImage((PictureBox)((Button)sender).Parent.FindForm().Controls[4]);
         }
 
-        private void browseImage(PictureBox pic)
+        private void BrowseImage(PictureBox pic)
         {
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Image Files (*.png, *.jpg, *.jpeg, *.bmp)|*.png; *.jpg; *.jpeg; *.bmp)";
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "Image Files (*.png, *.jpg, *.jpeg, *.bmp)|*.png; *.jpg; *.jpeg; *.bmp)"
+            };
 
             if (fileDialog.ShowDialog() == DialogResult.OK)
             {
@@ -1055,22 +1098,22 @@ namespace Project
                 Image openImage = Image.FromFile(fileDialog.FileName);
                 pic.Visible = true;
                 original = (Bitmap)openImage;
-                resizePictureBox(pic, openImage);
+                ResizePictureBox(pic, openImage);
                 zoomCount = 0;
                 workArea.Visible = true;
-                enableMenu(true);
+                EnableMenu(true);
                 workArea.BorderStyle = BorderStyle.Fixed3D;
-                centerPictureBox();              
+                CenterPictureBox();              
                 originalSize = workArea.Size;
 
                 properties.Location = new Point(display.Location.X + display.Width + 5, display.Location.Y);
                 properties.Size = new Size(properties.Right - 5, display.Height);
-                display_update_background();
+                Display_update_background();
             }
 
         }
 
-        private void enableMenu(bool active)
+        private void EnableMenu(bool active)
         {
             closeToolStripMenuItem.Enabled = active;
             saveAsToolStripMenuItem.Enabled = active;
@@ -1091,7 +1134,7 @@ namespace Project
             toolBox.Enabled = active;
         }
 
-        private void resizePictureBox(PictureBox pic, Image openImage)
+        private void ResizePictureBox(PictureBox pic, Image openImage)
         {
             pic.Image = openImage;
 
@@ -1116,25 +1159,25 @@ namespace Project
             
         }
 
-        private void newOption_Clicked(object sender, EventArgs e)
+        private void NewOption_Clicked(object sender, EventArgs e)
         {
             Button buttonClicked = sender as Button;
 
             if (((Button)sender).Parent.FindForm().Controls[1].Text.Length <= 0)
-                message("Insert a project name");
+                Message("Insert a project name");
             else
             {
                 Title = ((Button)sender).Parent.FindForm().Controls[1].Text;
                 this.Text += " - " + Title;
                 if (((PictureBox)((Button)sender).Parent.FindForm().Controls[4]).Visible == true)
                 {
-                    resizePictureBox(workArea, ((PictureBox)((Button)sender).Parent.FindForm().Controls[4]).Image);
+                    ResizePictureBox(workArea, ((PictureBox)((Button)sender).Parent.FindForm().Controls[4]).Image);
                 }
                 workArea.Visible = true;
                 toolBox.Enabled = true;
-                centerPictureBox();
+                CenterPictureBox();
                 ((Button)sender).Parent.FindForm().Close();
-                enableMenu(true);
+                EnableMenu(true);
 
             }
         }
@@ -1142,24 +1185,24 @@ namespace Project
 
         #region OPEN
 
-        private void openAction()
+        private void OpenAction()
         {
             if (drag == true)
                 if (dragging.IsAlive == true)
                     drag = false;
 
-            deactivateTools();
-            browseImage(workArea);
+            DeactivateTools();
+            BrowseImage(workArea);
             if (this.Text.Equals("PhotoMaster"))
                 this.Text += " - " + Title;
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openAction();
+            OpenAction();
         }
 
-        private void centerPictureBox()
+        private void CenterPictureBox()
         {
             int width = display.Width / 2 - workArea.Width / 2;
             int height = display.Height / 2 - workArea.Height / 2;
@@ -1170,7 +1213,7 @@ namespace Project
         #endregion
 
         #region SAVE
-        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             //to be implemented
         }
@@ -1178,52 +1221,52 @@ namespace Project
 
         #region SAVE AS
 
-        private void saveAsAction()
+        private void SaveAsAction()
         {
-            Form saveAsScreen = popForm("Save As", 500, 500);
+            Form saveAsScreen = PopForm("Save As", 500, 500);
 
-            Label path_lb = popLabel(50, 50, "Save Path:", saveAsScreen);
+            Label path_lb = PopLabel(50, 50, "Save Path:", saveAsScreen);
 
-            TextBox path = popText(150, 50, saveAsScreen);
+            System.Windows.Forms.TextBox path = PopText(150, 50, saveAsScreen);
             path.Text = "D:\\";
 
-            Button browse = popButton(280, 48, "Browse", saveAsScreen);
+            Button browse = PopButton(280, 48, "Browse", saveAsScreen);
 
-            browse.Click += new System.EventHandler(browseSaveAs_Clicked);
+            browse.Click += new System.EventHandler(BrowseSaveAs_Clicked);
 
-            Label name_lb = popLabel(50, 100, "File Name:", saveAsScreen);
+            Label name_lb = PopLabel(50, 100, "File Name:", saveAsScreen);
 
-            TextBox fname = popText(150, 100, saveAsScreen);
+            System.Windows.Forms.TextBox fname = PopText(150, 100, saveAsScreen);
             fname.Text = Title;
-            fname.TextChanged += new EventHandler(fname_TextChanged);
+            fname.TextChanged += new EventHandler(Fname_TextChanged);
 
-            Button save = popButton(150, 150, "Save", saveAsScreen);
+            Button save = PopButton(150, 150, "Save", saveAsScreen);
 
-            save.Click += new System.EventHandler(save_Clicked);
+            save.Click += new System.EventHandler(Save_Clicked);
 
-            GroupBox savetypes = popGrBox(150, 200, "Formats", types, saveAsScreen);
+            GroupBox savetypes = PopGrBox(150, 200, "Formats", types, saveAsScreen);
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveAsAction();
+            SaveAsAction();
         }
 
-        private void fname_TextChanged(object sender, EventArgs e)
+        private void Fname_TextChanged(object sender, EventArgs e)
         {
-            int i = ((TextBox)sender).SelectionStart;
-            ((TextBox)sender).TextChanged -= fname_TextChanged;
-            if (!((TextBox)sender).Text.EndsWith("." + getCheckedType((GroupBox)(((TextBox)sender).Parent.Controls[6]))))
+            int i = ((System.Windows.Forms.TextBox)sender).SelectionStart;
+            ((System.Windows.Forms.TextBox)sender).TextChanged -= Fname_TextChanged;
+            if (!((System.Windows.Forms.TextBox)sender).Text.EndsWith("." + GetCheckedType((GroupBox)(((System.Windows.Forms.TextBox)sender).Parent.Controls[6]))))
             {
-                if (((TextBox)sender).Text.LastIndexOf(".") > -1)
-                    ((TextBox)sender).Text = ((TextBox)sender).Text.Substring(0, ((TextBox)sender).Text.LastIndexOf("."));
-                ((TextBox)sender).Text += getCheckedType((GroupBox)(((TextBox)sender).Parent.Controls[6]));
+                if (((System.Windows.Forms.TextBox)sender).Text.LastIndexOf(".") > -1)
+                    ((System.Windows.Forms.TextBox)sender).Text = ((System.Windows.Forms.TextBox)sender).Text.Substring(0, ((System.Windows.Forms.TextBox)sender).Text.LastIndexOf("."));
+                ((System.Windows.Forms.TextBox)sender).Text += GetCheckedType((GroupBox)(((System.Windows.Forms.TextBox)sender).Parent.Controls[6]));
             }
-            ((TextBox)sender).TextChanged += fname_TextChanged;
-            ((TextBox)sender).SelectionStart = i;
+            ((System.Windows.Forms.TextBox)sender).TextChanged += Fname_TextChanged;
+            ((System.Windows.Forms.TextBox)sender).SelectionStart = i;
         }
 
-        private string getCheckedType(GroupBox gb)
+        private string GetCheckedType(GroupBox gb)
         {
             foreach (RadioButton c in gb.Controls)
             {
@@ -1233,14 +1276,14 @@ namespace Project
             return "";
         }
 
-        private void browseSaveAs_Clicked(object sender, EventArgs e)
+        private void BrowseSaveAs_Clicked(object sender, EventArgs e)
         {
             FolderBrowserDialog saveDialog = new FolderBrowserDialog();
             saveDialog.ShowDialog();
             ((Button)sender).Parent.FindForm().Controls[1].Text = saveDialog.SelectedPath;
         }
 
-        private void save_Clicked(object sender, EventArgs e)
+        private void Save_Clicked(object sender, EventArgs e)
         {
             Bitmap saveBitmap = new Bitmap(this.workArea.Image);
 
@@ -1259,11 +1302,11 @@ namespace Project
                 if (obj.GetType().Equals(typeof(DrawEllipse)))
                     g.DrawImage(((DrawEllipse)obj).Image, (int)((((DrawEllipse)obj).Location.X - workArea.Location.X) * workArea.Image.Width / workArea.Width), (int)((((DrawEllipse)obj).Location.Y - workArea.Location.Y) * workArea.Image.Height / workArea.Height), ((DrawEllipse)obj).Width * workArea.Image.Width / workArea.Width, ((DrawEllipse)obj).Height * workArea.Image.Height / workArea.Height);
 
-                if (obj.GetType().Equals(typeof(textBox)))
+                if (obj.GetType().Equals(typeof(TextBoxTool)))
                 {
-                    Font saveFont = new Font(((textBox)obj).Font.FontFamily ,((textBox)obj).Font.Size * workArea.Image.Width / workArea.Width, ((textBox)obj).Font.Style);
-                    SolidBrush textColor = new SolidBrush(((textBox)obj).ForeColor);
-                    g.DrawString(((textBox)obj).Text, saveFont, textColor, obj.Location.X * workArea.Image.Width / workArea.Width, obj.Location.Y * workArea.Image.Height / workArea.Height);
+                    Font saveFont = new Font(((TextBoxTool)obj).Font.FontFamily ,((TextBoxTool)obj).Font.Size * workArea.Image.Width / workArea.Width, ((TextBoxTool)obj).Font.Style);
+                    SolidBrush textColor = new SolidBrush(((TextBoxTool)obj).ForeColor);
+                    g.DrawString(((TextBoxTool)obj).Text, saveFont, textColor, obj.Location.X * workArea.Image.Width / workArea.Width, obj.Location.Y * workArea.Image.Height / workArea.Height);
                 }
             }
 
@@ -1273,21 +1316,21 @@ namespace Project
                 {
                     saveBitmap.Save(((Button)sender).Parent.FindForm().Controls[1].Text + "\\" + ((Button)sender).Parent.FindForm().Controls[4].Text);
 
-                    message("Save completed!");
+                    Message("Save completed!");
 
                     ((Button)sender).Parent.FindForm().Close();
                 }
                 catch (Exception ex)
                 {
-                    message(ex.Message);
+                    Message(ex.Message);
                 }
             }
             else
-                message("Choose a valid file format!");
+                Message("Choose a valid file format!");
 
         }
 
-        private void saveType_Changed(object sender, EventArgs e)
+        private void SaveType_Changed(object sender, EventArgs e)
         {
             if (((RadioButton)sender).Parent.FindForm().Controls[4].Text.Contains("."))
                 ((RadioButton)sender).Parent.FindForm().Controls[4].Text = ((RadioButton)sender).Parent.FindForm().Controls[4].Text.Substring(0, ((RadioButton)sender).Parent.FindForm().Controls[4].Text.IndexOf('.')) + ((RadioButton)sender).Text;
@@ -1297,29 +1340,29 @@ namespace Project
         #endregion
 
         #region IMPORT
-        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
         #endregion
 
         #region EXPORT
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExportToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
         #endregion
 
         #region CLOSE
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Controls[4].Controls.Clear();
             Title = "Untitled";
             this.Text = this.Text.Substring(0, this.Text.IndexOf('-') - 1);
-            initialise_workArea();
-            if (selectingActive == true)
+            Initialise_workArea();
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
-                    selectingActive = false;
+                    SelectingActive = false;
 
             if (drag == true)
                 if (dragging.IsAlive == true)
@@ -1327,13 +1370,13 @@ namespace Project
 
             selectionBox.Invalidate();
             workArea.Visible = false;
-            enableMenu(false);
+            EnableMenu(false);
         }
         #endregion
 
         #region PRINT
         //ramane de vazut
-        private void printToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PrintToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Visible == true)
             {
@@ -1341,17 +1384,17 @@ namespace Project
                 if (print.ShowDialog() == DialogResult.OK)
                 {
                     PrintDocument pd = new PrintDocument();
-                    pd.PrintPage += printPage;
+                    pd.PrintPage += PrintPage;
                     pd.Print();
                 }
             }
             else
             {
-                message("There is no image to print");
+                Message("There is no image to print");
             }
         }
 
-        private void printPage(object sender, PrintPageEventArgs e)
+        private void PrintPage(object sender, PrintPageEventArgs e)
         {
 
             System.Drawing.Image image = workArea.Image;
@@ -1372,31 +1415,31 @@ namespace Project
             }
             e.Graphics.DrawImage(image, m);
             e.Graphics.Dispose();
-            message("Imaginea a fost printata cu succes!");
+            Message("Imaginea a fost printata cu succes!");
         }
         #endregion
 
         #region OPTIONS
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
         #endregion
 
         #region EXIT
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Visible == true)
             {
-                Form exitForm = popForm("Exit", 250, 150);
+                Form exitForm = PopForm("Exit", 250, 150);
                 exitForm.Location = new Point((this.Width - exitForm.Width) / 2, (this.Height - exitForm.Height) / 2);
-                Label exitLabel = popLabel(40, 25, "Do you want to save changes?", exitForm);
-                Button yesButton = popButton(15, 75, "YES", exitForm);
-                Button noButton = popButton(150, 75, "NO", exitForm);
+                Label exitLabel = PopLabel(40, 25, "Do you want to save changes?", exitForm);
+                Button yesButton = PopButton(15, 75, "YES", exitForm);
+                Button noButton = PopButton(150, 75, "NO", exitForm);
 
-                noButton.Click += new System.EventHandler(closeApp);
+                noButton.Click += new System.EventHandler(CloseApp);
 
-                yesButton.Click += new System.EventHandler(saveAsToolStripMenuItem_Click);
+                yesButton.Click += new System.EventHandler(SaveAsToolStripMenuItem_Click);
             }
             else
             {
@@ -1404,11 +1447,11 @@ namespace Project
             }
         }
 
-        private void closeApp(object sender, EventArgs e)
+        private void CloseApp(object sender, EventArgs e)
         {
-            if (selectingActive == true)
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
-                    selectingActive = false;
+                    SelectingActive = false;
             if (drag == true)
                 if (dragging.IsAlive == true)
                     drag = false;
@@ -1436,36 +1479,36 @@ namespace Project
         /// </summary>
         /// <param name="sender">Just some sender param</param>
         /// <param name="e">Another e</param>
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UndoToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RedoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
         }
 
-        private void copyAction()
+        private void CopyAction()
         {
-            createSelection();
+            CreateSelection();
             pasteToolStripMenuItem.Enabled = true;
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            copyAction();
+            CopyAction();
         }
 
-        private void cutAction()
+        private void CutAction()
         {
             pasteToolStripMenuItem.Enabled = true;
-            if (selectingActive)
+            if (SelectingActive)
             {
-                selectingActive = false;
-                createSelection();
+                SelectingActive = false;
+                CreateSelection();
                 Bitmap cut = new Bitmap(workArea.Image, workArea.Image.Width, workArea.Image.Height);
-                Rectangle r = createRectangle(selectStart, selectEnd);
+                Rectangle r = CreateRectangle(selectStart, selectEnd);
 
                 BitmapData bitmapData = cut.LockBits(new Rectangle(0, 0, cut.Width, cut.Height), ImageLockMode.ReadWrite, cut.PixelFormat);
                 int bytesPerPixel = Bitmap.GetPixelFormatSize(cut.PixelFormat) / 8;
@@ -1494,7 +1537,7 @@ namespace Project
                 {
                     Point scaledX = new Point((int)(selectStart.X * (1.0 * workArea.Image.Width / workArea.Width)), (int)(selectStart.Y * (1.0 * workArea.Image.Height / workArea.Height)));
                     Point scaledY = new Point((int)(selectEnd.X * (1.0 * workArea.Image.Width / workArea.Width)), (int)(selectEnd.Y * (1.0 * workArea.Image.Height / workArea.Height)));
-                    Rectangle rscaled = createRectangle(scaledX, scaledY);
+                    Rectangle rscaled = CreateRectangle(scaledX, scaledY);
                     for (int y = (int)(r.Y * (1.0 * workArea.Image.Height / workArea.Height)); y <= (int)((r.Y + r.Height) * (1.0 * workArea.Image.Height / workArea.Height)); y++)
                         if (y >= 0 && y < cut.Height)
                         {
@@ -1513,7 +1556,7 @@ namespace Project
                 cut.UnlockBits(bitmapData);
 
                 workArea.Image = cut;
-                display_update_background();
+                Display_update_background();
 
                 //Bitmap cut = new Bitmap(workArea.Image, workArea.Image.Width, workArea.Image.Height);
                 ////DirectBitmap cut = new DirectBitmap(new Bitmap(workArea.Image));
@@ -1560,37 +1603,39 @@ namespace Project
             }
         }
 
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            cutAction();
+            CutAction();
         }
 
-        private void pasteAction()
+        private void PasteAction()
         {
-            PictureBox copy = new PictureBox();
-            copy.Size = copiedImage.Size;
+            PictureBox copy = new PictureBox
+            {
+                Size = copiedImage.Size
+            };
             copy.Location = new Point((display.Width - copy.Width) / 2, (display.Height - copy.Height) / 2);
             copy.BackColor = Color.Transparent;
             copy.Image = copiedImage;
             copy.Visible = true;
             display.Controls.Add(copy);
             copy.BringToFront();
-            addElement(copy);
-            selectingActive = false;
-            textBoxRefresh();
+            AddElement(copy);
+            SelectingActive = false;
+            TextBoxRefresh();
 
-            copy.MouseDown += new MouseEventHandler(move_MouseDown);
-            copy.MouseMove += new MouseEventHandler(move_MouseMove);
-            copy.MouseUp += new MouseEventHandler(move_MouseUp);
-            copy.MouseClick += new MouseEventHandler(copy_MouseClick);
+            copy.MouseDown += new MouseEventHandler(Move_MouseDown);
+            copy.MouseMove += new MouseEventHandler(Move_MouseMove);
+            copy.MouseUp += new MouseEventHandler(Move_MouseUp);
+            copy.MouseClick += new MouseEventHandler(Copy_MouseClick);
         }
 
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            pasteAction();
+            PasteAction();
         }
 
-        private void addElement(Control element)
+        private void AddElement(Control element)
         {
             elements.Add(element);
             index = elements.Count - 1;
@@ -1601,7 +1646,7 @@ namespace Project
             }
         }
 
-        private void deleteAction()
+        private void DeleteAction()
         {
             if (elements.Count > 0)
             {
@@ -1619,29 +1664,29 @@ namespace Project
             }
         }
 
-        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            deleteAction();
+            DeleteAction();
         }
 
-        private void cropToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CropToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            selectingActive = false;
+            SelectingActive = false;
             selectionBox.Invalidate();
-            textBoxRefresh();
+            TextBoxRefresh();
 
-            createSelection();
+            CreateSelection();
             workArea.Image = copiedImage;
-            resizePictureBox(workArea, workArea.Image);
-            centerPictureBox();
+            ResizePictureBox(workArea, workArea.Image);
+            CenterPictureBox();
             zoomCount = 0;
             toolBox.Controls[0].BackColor = idleColor;
-            deactivateAll();
+            DeactivateAll();
         }
 
-        private void createSelection()
+        private void CreateSelection()
         {
-            Rectangle r = createRectangle(selectStart, selectEnd);
+            Rectangle r = CreateRectangle(selectStart, selectEnd);
             Bitmap original = new Bitmap(workArea.Image, workArea.Width, workArea.Height);
             
             copiedImage = new Bitmap(r.Width, r.Height);
@@ -1719,7 +1764,7 @@ namespace Project
             return ((Math.Pow(Math.Abs(x-r.Width*1.0/2-r.X),2)/Math.Pow(r.Width * 1.0 / 2,2) + Math.Pow(Math.Abs(y - r.Height * 1.0 / 2 - r.Y), 2) / Math.Pow(r.Height * 1.0 / 2, 2)) < 1);
         }
 
-        private void copy_MouseClick(object sender, MouseEventArgs e)
+        private void Copy_MouseClick(object sender, MouseEventArgs e)
         {
             ContextMenu contextMenu = new ContextMenu();
             MenuItem copy = new MenuItem("Copy");
@@ -1728,56 +1773,56 @@ namespace Project
             MenuItem flipHorizontal = new MenuItem("Flip Horizontal");
             MenuItem flipVertical = new MenuItem("Flip Vertical");
 
-            copy.Click += new EventHandler(copy_Click);
-            cut.Click += new EventHandler(cutToolStripMenuItem_Click);
-            delete.Click += new EventHandler(deleteToolStripMenuItem_Click);
-            flipHorizontal.Click += new EventHandler(flipHorizontal_Click);
-            flipVertical.Click += new EventHandler(flipVertical_Click);
+            copy.Click += new EventHandler(Copy_Click);
+            cut.Click += new EventHandler(CutToolStripMenuItem_Click);
+            delete.Click += new EventHandler(DeleteToolStripMenuItem_Click);
+            flipHorizontal.Click += new EventHandler(FlipHorizontal_Click);
+            flipVertical.Click += new EventHandler(FlipVertical_Click);
 
             contextMenu.MenuItems.AddRange(new MenuItem[] { copy, cut, delete, flipHorizontal, flipVertical });
             ((PictureBox)sender).ContextMenu = contextMenu;
         }
 
-        private void copy_Click(object sender, EventArgs e)
+        private void Copy_Click(object sender, EventArgs e)
         {
             copiedImage = new Bitmap(((PictureBox)elements[index]).Image);
         }
 
-        private void flipHorizontal_Click(object sender, EventArgs e)
+        private void FlipHorizontal_Click(object sender, EventArgs e)
         {
             Bitmap original = new Bitmap(((PictureBox)elements[index]).Image);
             original.RotateFlip(RotateFlipType.RotateNoneFlipX);
             ((PictureBox)elements[index]).Image = original;
         }
 
-        private void flipVertical_Click(object sender, EventArgs e)
+        private void FlipVertical_Click(object sender, EventArgs e)
         {
             Bitmap original = new Bitmap(((PictureBox)elements[index]).Image);
             original.RotateFlip(RotateFlipType.RotateNoneFlipY);
             ((PictureBox)elements[index]).Image = original;
         }
 
-        private void move_MouseDown(object sender, MouseEventArgs e)
+        private void Move_MouseDown(object sender, MouseEventArgs e)
         {
-            if (elements[index].GetType().Equals(typeof(textBox)))
-                ((textBox)elements[index]).LoseFocus((Control)sender);
+            if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+                ((TextBoxTool)elements[index]).LoseFocus((Control)sender);
             index = elements.IndexOf(sender as Control);
             drag = true;
             movePosition = e.Location;
-            dragging = new Thread(dragPicture);
+            dragging = new Thread(DragPicture);
             dragging.Start();
             startSize = elements[index].Size;
             ((Control)sender).BringToFront();
             this.Controls[4].Controls.Clear();
-            rectangleProperties();
+            RectangleProperties();
         }
 
-        private void object_Click(object sender, EventArgs e)
+        private void Object_Click(object sender, EventArgs e)
         {
             index = elements.IndexOf(sender as Control);
         }
 
-        private void move_MouseMove(object sender, MouseEventArgs e)
+        private void Move_MouseMove(object sender, MouseEventArgs e)
         {
             if (((Control)sender).GetType().Equals(typeof(PictureBox)))
             {
@@ -1789,7 +1834,7 @@ namespace Project
                     {
                         if (transform)
                         {
-                            transformSelection(e.Location);
+                            TransformSelection(e.Location);
                             copy.SizeMode = PictureBoxSizeMode.StretchImage;
                         }
                         else
@@ -1809,14 +1854,14 @@ namespace Project
                 {
                     transformPosition = e.Location;
                     if (((PictureBox)sender).Equals(copy))
-                        changeTransformCursors();
+                        ChangeTransformCursors();
                     else
                         ((PictureBox)sender).Cursor = Cursors.Default;
                 }
             }
         }
 
-        private void transformSelection(Point location)
+        private void TransformSelection(Point location)
         {
             PictureBox copy = (PictureBox)elements[index];
             moveNewPosition = Point.Empty;
@@ -1973,7 +2018,7 @@ namespace Project
             }
         }
 
-        private void move_MouseUp(object sender, MouseEventArgs e)
+        private void Move_MouseUp(object sender, MouseEventArgs e)
         {
             drag = false;
             transform = false;
@@ -1981,7 +2026,7 @@ namespace Project
             moveNewPosition = Point.Empty;
         }
 
-        private void changeTransformCursors()
+        private void ChangeTransformCursors()
         {
             transform = true;
             if ((transformPosition.X < resizingEdge && transformPosition.Y < resizingEdge) || (transformPosition.X > elements[index].Width - resizingEdge && transformPosition.Y > elements[index].Height - resizingEdge))
@@ -2007,7 +2052,7 @@ namespace Project
             }
         }
 
-        private void dragPicture()
+        private void DragPicture()
         {
             timerMove.Start();
             do
@@ -2023,15 +2068,15 @@ namespace Project
         #endregion
 
         #region EFFECTS
-        private void grayscaleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GrayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                grayscaleThread(workArea);
+                GrayscaleThread(workArea);
         }
 
-        private void grayscaleThread(PictureBox picture)
+        private void GrayscaleThread(PictureBox picture)
         {
-            ParameterizedThreadStart th = new ParameterizedThreadStart(convertGrayscale);
+            ParameterizedThreadStart th = new ParameterizedThreadStart(ConvertGrayscale);
             Thread convert = new Thread(th);
             if(!convert.IsAlive)
               convert.Start(picture);
@@ -2039,11 +2084,11 @@ namespace Project
 
         delegate void threadPictureRefreshCallBack(PictureBox picture);
 
-        private void invokeRefresh(PictureBox picture)
+        private void InvokeRefresh(PictureBox picture)
         {
             if (picture.InvokeRequired)
             {
-                threadPictureRefreshCallBack callbk = new threadPictureRefreshCallBack(invokeRefresh);
+                threadPictureRefreshCallBack callbk = new threadPictureRefreshCallBack(InvokeRefresh);
                 picture.Invoke(callbk, new object[] { picture });
             }
             else
@@ -2054,11 +2099,11 @@ namespace Project
 
         delegate void threadPictureConvertCallBack(PictureBox picture, bool done);
 
-        private void invokeConvertStatus(PictureBox picture, bool done)
+        private void InvokeConvertStatus(PictureBox picture, bool done)
         {
             if (picture.InvokeRequired)
             {
-                threadPictureConvertCallBack callbk = new threadPictureConvertCallBack(invokeConvertStatus);
+                threadPictureConvertCallBack callbk = new threadPictureConvertCallBack(InvokeConvertStatus);
                 picture.Invoke(callbk, new object[] { picture, done });
             }
             else
@@ -2068,11 +2113,11 @@ namespace Project
             }
         }
 
-        private void convertGrayscale(object pic)
+        private void ConvertGrayscale(object pic)
         { 
             PictureBox picture = (PictureBox)pic;
 
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
 
             Bitmap originalimg = new Bitmap(picture.Image);
             int width = 0, heigth = 0;
@@ -2126,42 +2171,42 @@ namespace Project
             //        invokeRefresh(picture);
             //    }
             //}
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
       
-        private void redFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RedFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                redFilterThread(workArea);
+                RedFilterThread(workArea);
         }
 
-        private void greenFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void GreenFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                greenFilterThread(workArea);
+                GreenFilterThread(workArea);
         }
 
-        private void blueFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void BlueFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                blueFilterThread(workArea);
+                BlueFilterThread(workArea);
         }
 
-        private void redFilterThread(PictureBox picture)
+        private void RedFilterThread(PictureBox picture)
         {
-            ParameterizedThreadStart th = new ParameterizedThreadStart(redFilter);
+            ParameterizedThreadStart th = new ParameterizedThreadStart(RedFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
                 convert.Start(picture);
 
         }
 
-        private void redFilter(object pic)
+        private void RedFilter(object pic)
         {
             PictureBox picture = (PictureBox)pic;
 
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
 
             Bitmap originalimg = new Bitmap(picture.Image);
 
@@ -2194,22 +2239,22 @@ namespace Project
 
             picture.Image = originalimg;
 
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
-        private void greenFilterThread(PictureBox picture)
+        private void GreenFilterThread(PictureBox picture)
         {
-            ParameterizedThreadStart th = new ParameterizedThreadStart(greenFilter);
+            ParameterizedThreadStart th = new ParameterizedThreadStart(GreenFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
                 convert.Start(picture);
         }
 
-        private void greenFilter(object pic)
+        private void GreenFilter(object pic)
         {
             PictureBox picture = (PictureBox)pic;
 
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
 
             Bitmap originalimg = new Bitmap(picture.Image);
             BitmapData bitmapData = originalimg.LockBits(new Rectangle(0, 0, originalimg.Width, originalimg.Height), ImageLockMode.ReadWrite, originalimg.PixelFormat);
@@ -2240,23 +2285,23 @@ namespace Project
             originalimg.UnlockBits(bitmapData);
 
             picture.Image = originalimg;
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
-        private void blueFilterThread(PictureBox picture)
+        private void BlueFilterThread(PictureBox picture)
         {
-            ParameterizedThreadStart th = new ParameterizedThreadStart(blueFilter);
+            ParameterizedThreadStart th = new ParameterizedThreadStart(BlueFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
                 convert.Start(picture);
 
         }
 
-        private void blueFilter(object pic)
+        private void BlueFilter(object pic)
         {
             PictureBox picture = (PictureBox)pic;
 
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
 
             Bitmap originalimg = new Bitmap(picture.Image);
             BitmapData bitmapData = originalimg.LockBits(new Rectangle(0, 0, originalimg.Width, originalimg.Height), ImageLockMode.ReadWrite, originalimg.PixelFormat);
@@ -2287,28 +2332,28 @@ namespace Project
             originalimg.UnlockBits(bitmapData);
 
             picture.Image = originalimg;
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
-        private void invertColorsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InvertColorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                invertThread(workArea);
+                InvertThread(workArea);
         }
 
-        private void invertThread(PictureBox picture)
+        private void InvertThread(PictureBox picture)
         {
-            ParameterizedThreadStart th = new ParameterizedThreadStart(invertColors);
+            ParameterizedThreadStart th = new ParameterizedThreadStart(InvertColors);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
                 convert.Start(picture);
 
         }
 
-        private void invertColors(object pic)
+        private void InvertColors(object pic)
         {
             PictureBox picture = (PictureBox)pic;
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
             Bitmap originalimg = new Bitmap(picture.Image);
 
             BitmapData bitmapData = originalimg.LockBits(new Rectangle(0, 0, originalimg.Width, originalimg.Height), ImageLockMode.ReadWrite, originalimg.PixelFormat);
@@ -2339,16 +2384,16 @@ namespace Project
             originalimg.UnlockBits(bitmapData);
 
             picture.Image = originalimg;
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
-        private void sepiaToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SepiaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
-                sepiaThread(workArea);
+                SepiaThread(workArea);
         }
 
-        private void sepiaThread(PictureBox picture)
+        private void SepiaThread(PictureBox picture)
         {
             ParameterizedThreadStart th = new ParameterizedThreadStart(Sepia);
             Thread convert = new Thread(th);
@@ -2360,7 +2405,7 @@ namespace Project
         private void Sepia(object pic)
         {
             PictureBox picture = (PictureBox)pic;
-            invokeConvertStatus(picture, false);
+            InvokeConvertStatus(picture, false);
             Bitmap originalimg = new Bitmap(picture.Image);
             
             BitmapData bitmapData = originalimg.LockBits(new Rectangle(0, 0, originalimg.Width, originalimg.Height), ImageLockMode.ReadWrite, originalimg.PixelFormat);
@@ -2404,14 +2449,14 @@ namespace Project
 
             picture.Image = originalimg;
 
-            invokeConvertStatus(picture, true);
+            InvokeConvertStatus(picture, true);
         }
 
         #endregion
 
         #region VIEW BUTTONS
 
-        private void fullScreenAction()
+        private void FullScreenAction()
         {
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
@@ -2420,12 +2465,12 @@ namespace Project
             exitFullScreenToolStripMenuItem.Visible = true;
         }
 
-        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            fullScreenAction();
+            FullScreenAction();
         }
 
-        private void exitFullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitFullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.WindowState = FormWindowState.Normal;
@@ -2434,45 +2479,45 @@ namespace Project
             exitFullScreenToolStripMenuItem.Visible = false;
         }
 
-        private void zoomInAction()
+        private void ZoomInAction()
         {
             if (zoomCount < 25)
             {
                 zoomCount++;
-                zoomIn();
-                display_update_background();
+                ZoomIn();
+                Display_update_background();
             }
         }
 
-        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            zoomInAction();
+            ZoomInAction();
         }
 
-        private void zoomOutAction()
+        private void ZoomOutAction()
         {
             if (zoomCount > -15)
             {
                 zoomCount--;
-                zoomOut();
-                display_update_background();
+                ZoomOut();
+                Display_update_background();
             }
         }
 
-        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            zoomOutAction();
+            ZoomOutAction();
         }
 
-        private void fitOnScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FitOnScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            resizeImage(workArea.Image, display.ClientSize.Width - 120, display.ClientSize.Height - 120);
-            resizePictureBox(workArea, workArea.Image);
-            centerPictureBox();
+            ResizeImage(workArea.Image, display.ClientSize.Width - 120, display.ClientSize.Height - 120);
+            ResizePictureBox(workArea, workArea.Image);
+            CenterPictureBox();
             zoomCount = (int)Math.Ceiling((Math.Log(workArea.Width / originalSize.Width) / Math.Log(multiplier)));
         }
 
-        private void resizeImage(Image image, int width, int height)
+        private void ResizeImage(Image image, int width, int height)
         {
             //var destRect = new Rectangle(0, 0, width, height);
             //var destImage = new Bitmap(width, height);
@@ -2501,13 +2546,13 @@ namespace Project
             //resizePictureBox(workArea, destImage);
         }
 
-        private void zoomIn()
+        private void ZoomIn()
         {
             int x = display.AutoScrollPosition.X, y = display.AutoScrollPosition.Y;
 
-            resizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
-            centerPictureBox();
-            resizePictureBox(workArea, workArea.Image);
+            ResizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
+            CenterPictureBox();
+            ResizePictureBox(workArea, workArea.Image);
 
             if (workArea.Width > display.ClientSize.Width || workArea.Height > display.ClientSize.Height)
             {
@@ -2523,13 +2568,13 @@ namespace Project
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) * multiplier + 0.5 * (multiplier - 1) * display.Width), (int)(Math.Abs(y) * multiplier + 0.5 * (multiplier - 1) * display.Height));
         }
 
-        private void zoomIn(Point mouse)
+        private void ZoomIn(Point mouse)
         {
 
             int scrollhorriz = display.AutoScrollPosition.X, scrollvert = display.AutoScrollPosition.Y;
-            resizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
-            centerPictureBox();
-            resizePictureBox(workArea, workArea.Image);
+            ResizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
+            CenterPictureBox();
+            ResizePictureBox(workArea, workArea.Image);
 
             int x = mouse.X, y = mouse.Y;
 
@@ -2547,14 +2592,14 @@ namespace Project
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) * multiplier - x - scrollhorriz), (int)(Math.Abs(y) * multiplier - y - scrollvert));
         }
 
-        private void zoomOut()
+        private void ZoomOut()
 
         {
             int x = display.AutoScrollPosition.X, y = display.AutoScrollPosition.Y;
 
-            resizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
-            centerPictureBox();
-            resizePictureBox(workArea, workArea.Image);
+            ResizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
+            CenterPictureBox();
+            ResizePictureBox(workArea, workArea.Image);
 
             if (workArea.Width > display.ClientSize.Width || workArea.Height > display.ClientSize.Height)
             {
@@ -2570,11 +2615,11 @@ namespace Project
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) / multiplier - 0.5 * (multiplier - 1) * display.Width), (int)(Math.Abs(y) / multiplier - 0.5 * (multiplier - 1) * display.Height));
         }
 
-        private void zoomOut(Point mouse)
+        private void ZoomOut(Point mouse)
         {
-            resizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
-            centerPictureBox();
-            resizePictureBox(workArea, workArea.Image);
+            ResizeImage(workArea.Image, (int)(originalSize.Width * Math.Pow(multiplier, zoomCount)), (int)(originalSize.Height * Math.Pow(multiplier, zoomCount)));
+            CenterPictureBox();
+            ResizePictureBox(workArea, workArea.Image);
             int x = mouse.X, y = mouse.Y;
             int scrollhorriz = display.AutoScrollPosition.X, scrollvert = display.AutoScrollPosition.Y;
             if (workArea.Width > display.ClientSize.Width || workArea.Height > display.ClientSize.Height)
@@ -2595,31 +2640,31 @@ namespace Project
 
         #region SELECT BUTTONS
 
-        private void allAction()
+        private void AllAction()
         {
-            selectingActive = false;
-            selecting = new Thread(drawSelectionThread);
+            SelectingActive = false;
+            selecting = new Thread(DrawSelectionThread);
             selectStart = new Point(0, 0);
             selectEnd = new Point(workArea.Width-1, workArea.Height-1);
             selectionBox.Invalidate();
-            textBoxRefresh();
+            TextBoxRefresh();
             selecting.Start();
         }
 
-        private void allToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            allAction();
+            AllAction();
         }
 
-        private void deselectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (selectingActive == true)
-                selectingActive = false;
+            if (SelectingActive == true)
+                SelectingActive = false;
             selectionBox.Invalidate();
-            textBoxRefresh();
+            TextBoxRefresh();
         }
 
-        private void inverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void InverseSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
@@ -2633,11 +2678,11 @@ namespace Project
             properties.Location = new Point(display.Location.X + display.Width + 5, properties.Location.Y);
         }
 
-        private void panel1_Resize(object sender, EventArgs e)
+        private void Panel1_Resize(object sender, EventArgs e)
         {
             int xi = Math.Abs(display.AutoScrollPosition.X), yi = Math.Abs(display.AutoScrollPosition.Y);
 
-            centerPictureBox();
+            CenterPictureBox();
             toolBar.Location = new Point(display.Left, display.Top + display.Height + 5);
             toolBox.Height = display.ClientSize.Height;
 
@@ -2655,12 +2700,12 @@ namespace Project
             display.AutoScrollPosition = new Point(xi, yi);
         }
 
-        private void display_update_background()
+        private void Display_update_background()
         {
             Bitmap copy = new Bitmap(display.Width, display.Height);
             using (Graphics g = Graphics.FromImage(copy))
             {
-                g.DrawImage(workArea.Image, createRectangle(workArea.Location, new Point(workArea.Location.X + workArea.Width, workArea.Location.Y + workArea.Height)));
+                g.DrawImage(workArea.Image, CreateRectangle(workArea.Location, new Point(workArea.Location.X + workArea.Width, workArea.Location.Y + workArea.Height)));
                 //g.DrawImage(workArea.Image, workArea.Location);
                 //g.DrawImage(workArea.Image, new Point[] { workArea.Location, new Point(workArea.Location.X + workArea.Width, workArea.Location.Y), new Point(workArea.Location.X, workArea.Location.Y + workArea.Height), new Point(workArea.Location.X + workArea.Width, workArea.Location.Y + workArea.Height) });
                display.BackgroundImage = copy;
@@ -2669,33 +2714,35 @@ namespace Project
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (selectingActive == true)
+            if (SelectingActive == true)
                 if (selecting.IsAlive == true)
-                    selectingActive = false;
+                    SelectingActive = false;
 
             if (drag == true)
                 if (dragging.IsAlive == true)
                     drag = false;
         }
 
-        private Button popButton(int x, int y, Control f)
+        private Button PopButton(int x, int y, Control f)
         {
-            Button bt = new Button();
-            bt.Location = new Point(x, y);
-            bt.Padding = new Padding(5, 0, 5, 0);
-            bt.TabStop = false;
-            bt.FlatStyle = FlatStyle.Flat;
-            bt.Size = new Size(33, 33);
+            Button bt = new Button
+            {
+                Location = new Point(x, y),
+                Padding = new Padding(5, 0, 5, 0),
+                TabStop = false,
+                FlatStyle = FlatStyle.Flat,
+                Size = new Size(33, 33)
+            };
             bt.FlatAppearance.BorderSize = 0;
             bt.FlatAppearance.BorderColor = Color.FromArgb(0, 255, 255, 255);
-            bt.MouseEnter += new EventHandler(tool_MouseEnter);
-            bt.MouseLeave += new EventHandler(tool_MouseLeave);
+            bt.MouseEnter += new EventHandler(Tool_MouseEnter);
+            bt.MouseLeave += new EventHandler(Tool_MouseLeave);
             bt.BackColor = idleColor;
             f.Controls.Add(bt);
             return bt;
         }
 
-        private void tool_MouseEnter(object sender, EventArgs e)
+        private void Tool_MouseEnter(object sender, EventArgs e)
         {
             if (((Button)sender).Parent == toolBox)
             {
@@ -2708,7 +2755,7 @@ namespace Project
                 ((Button)sender).BackColor = hoverColor;
         }
 
-        private void tool_MouseLeave(object sender, EventArgs e)
+        private void Tool_MouseLeave(object sender, EventArgs e)
         {
             if (((Button)sender).Parent == toolBox)
             {
@@ -2721,7 +2768,7 @@ namespace Project
                 ((Button)sender).BackColor = idleColor;
         }
 
-        private void toolBar_Reset()
+        private void ToolBar_Reset()
         {
             foreach (Button bt in toolBar.Controls)
             {
@@ -2735,21 +2782,21 @@ namespace Project
         {
             toolBar.Visible = true;
             int i = 0;
-            toolBar_Reset();
+            ToolBar_Reset();
             activeToolBar = menuStrip1.Items.IndexOf((ToolStripItem)sender);
             switch (activeToolBar)
             {
                 case 0:
                     {
-                        Button New = popButton(i * 35, 0, toolBar);
+                        Button New = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(New, "New");
-                        New.Click += new EventHandler(newToolStripMenuItem_Click);
+                        New.Click += new EventHandler(NewToolStripMenuItem_Click);
                         New.BackgroundImage = Resources.New;
                         i++;
 
-                        Button open = popButton(i * 35, 0, toolBar);
+                        Button open = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(open, "Open");
-                        open.Click += new EventHandler(openToolStripMenuItem_Click);
+                        open.Click += new EventHandler(OpenToolStripMenuItem_Click);
                         open.BackgroundImage = Resources.Open;
                         i++;
 
@@ -2763,9 +2810,9 @@ namespace Project
                         //    save.BackgroundImage = Resources.Save_inactive;
                         //i++;
 
-                        Button saveas = popButton(i * 35, 0, toolBar);
+                        Button saveas = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(saveas, "Save As");
-                        saveas.Click += new EventHandler(saveAsToolStripMenuItem_Click);
+                        saveas.Click += new EventHandler(SaveAsToolStripMenuItem_Click);
                         saveas.Enabled = saveAsToolStripMenuItem.Enabled;
                         if (saveas.Enabled)
                             saveas.BackgroundImage = Resources.SaveAs_active;
@@ -2773,9 +2820,9 @@ namespace Project
                             saveas.BackgroundImage = Resources.SaveAs_inactive;
                         i++;
 
-                        Button close = popButton(i * 35, 0, toolBar);
+                        Button close = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(close, "Close");
-                        close.Click += new EventHandler(closeToolStripMenuItem_Click);
+                        close.Click += new EventHandler(CloseToolStripMenuItem_Click);
                         close.Enabled = closeToolStripMenuItem.Enabled;
                         if (close.Enabled)
                             close.BackgroundImage = Resources.Close_active;
@@ -2793,18 +2840,18 @@ namespace Project
                         //    print.BackgroundImage = Resources.Print_inactive;
                         //i++;
 
-                        Button exit = popButton(i * 35, 0, toolBar);
+                        Button exit = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(exit, "Exit");
-                        exit.Click += new EventHandler(exitToolStripMenuItem_Click);
+                        exit.Click += new EventHandler(ExitToolStripMenuItem_Click);
                         exit.BackgroundImage = Resources.Exit;
 
                         break;
                     }
                 case 1:
                     {
-                        Button copy = popButton(i * 35, 0, toolBar);
+                        Button copy = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(copy, "Copy");
-                        copy.Click += new EventHandler(copyToolStripMenuItem_Click);
+                        copy.Click += new EventHandler(CopyToolStripMenuItem_Click);
                         copy.Enabled = copyToolStripMenuItem.Enabled;
                         if (copy.Enabled)
                             copy.BackgroundImage = Resources.Copy_active;
@@ -2812,9 +2859,9 @@ namespace Project
                             copy.BackgroundImage = Resources.Copy_inactive;
                         i++;
 
-                        Button paste = popButton(i * 35, 0, toolBar);
+                        Button paste = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(paste, "Paste");
-                        paste.Click += new EventHandler(pasteToolStripMenuItem_Click);
+                        paste.Click += new EventHandler(PasteToolStripMenuItem_Click);
                         paste.Enabled = pasteToolStripMenuItem.Enabled;
                         if (paste.Enabled)
                             paste.BackgroundImage = Resources.Paste_active;
@@ -2822,9 +2869,9 @@ namespace Project
                             paste.BackgroundImage = Resources.Paste_inactive;
                         i++;
 
-                        Button delete = popButton(i * 35, 0, toolBar);
+                        Button delete = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(delete, "Delete");
-                        delete.Click += new EventHandler(deleteToolStripMenuItem_Click);
+                        delete.Click += new EventHandler(DeleteToolStripMenuItem_Click);
                         delete.Enabled = deleteToolStripMenuItem.Enabled;
                         if (delete.Enabled)
                             delete.BackgroundImage = Resources.Delete_active;
@@ -2832,9 +2879,9 @@ namespace Project
                             delete.BackgroundImage = Resources.Delete_inactive;
                         i++;
 
-                        Button crop = popButton(i * 35, 0, toolBar);
+                        Button crop = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(crop, "Crop");
-                        crop.Click += new EventHandler(cropToolStripMenuItem_Click);
+                        crop.Click += new EventHandler(CropToolStripMenuItem_Click);
                         crop.Enabled = cropToolStripMenuItem.Enabled;
                         if (crop.Enabled)
                             crop.BackgroundImage = Resources.Crop_active;
@@ -2844,16 +2891,16 @@ namespace Project
                     }
                 case 2:
                     {
-                        Button grayscale = popButton(i * 35, 0, toolBar);
+                        Button grayscale = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(grayscale, "Grayscale");
-                        grayscale.Click += new EventHandler(grayscaleToolStripMenuItem_Click);
+                        grayscale.Click += new EventHandler(GrayscaleToolStripMenuItem_Click);
                         grayscale.Enabled = grayscaleToolStripMenuItem.Enabled;
                         grayscale.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button sepia = popButton(i * 35, 0, toolBar);
+                        Button sepia = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(sepia, "Sepia");
-                        sepia.Click += new EventHandler(sepiaToolStripMenuItem_Click);
+                        sepia.Click += new EventHandler(SepiaToolStripMenuItem_Click);
                         sepia.Enabled = sepiaToolStripMenuItem.Enabled;
                         if (sepia.Enabled)
                             sepia.BackgroundImage = Resources.Sepia_active;
@@ -2861,9 +2908,9 @@ namespace Project
                             sepia.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button red = popButton(i * 35, 0, toolBar);
+                        Button red = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(red, "Red Filter");
-                        red.Click += new EventHandler(redFilterToolStripMenuItem_Click);
+                        red.Click += new EventHandler(RedFilterToolStripMenuItem_Click);
                         red.Enabled = redFilterToolStripMenuItem.Enabled;
                         if (red.Enabled)
                             red.BackgroundImage = Resources.RedFilter_active;
@@ -2871,9 +2918,9 @@ namespace Project
                             red.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button green = popButton(i * 35, 0, toolBar);
+                        Button green = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(green, "Green Filter");
-                        green.Click += new EventHandler(greenFilterToolStripMenuItem_Click);
+                        green.Click += new EventHandler(GreenFilterToolStripMenuItem_Click);
                         green.Enabled = greenFilterToolStripMenuItem.Enabled;
                         if (green.Enabled)
                             green.BackgroundImage = Resources.GreenFilter_active;
@@ -2881,9 +2928,9 @@ namespace Project
                             green.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button blue = popButton(i * 35, 0, toolBar);
+                        Button blue = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(blue, "Blue Filter");
-                        blue.Click += new EventHandler(blueFilterToolStripMenuItem_Click);
+                        blue.Click += new EventHandler(BlueFilterToolStripMenuItem_Click);
                         blue.Enabled = blueFilterToolStripMenuItem.Enabled;
                         if (blue.Enabled)
                             blue.BackgroundImage = Resources.BlueFilter_active;
@@ -2891,9 +2938,9 @@ namespace Project
                             blue.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button invert = popButton(i * 35, 0, toolBar);
+                        Button invert = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(invert, "Invert Colors");
-                        invert.Click += new EventHandler(invertColorsToolStripMenuItem_Click);
+                        invert.Click += new EventHandler(InvertColorsToolStripMenuItem_Click);
                         invert.Enabled = invertColorsToolStripMenuItem.Enabled;
                         if (invert.Enabled)
                             invert.BackgroundImage = Resources.InvertColors;
@@ -2901,9 +2948,9 @@ namespace Project
                             invert.BackgroundImage = Resources.Grayscale;
                         i++;
 
-                        Button original = popButton(i * 35, 0, toolBar);
+                        Button original = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(original, "Revert to Original");
-                        original.Click += new EventHandler(revertToOriginalToolStripMenuItem_Click);
+                        original.Click += new EventHandler(RevertToOriginalToolStripMenuItem_Click);
                         original.Enabled = revertToOriginalToolStripMenuItem.Enabled;
                         if (original.Enabled)
                             original.BackgroundImage = Resources.RevertToOriginal_active;
@@ -2913,26 +2960,26 @@ namespace Project
                     }
                 case 3:
                     {
-                        Button fullscreen = popButton(i * 35, 0, toolBar);
+                        Button fullscreen = PopButton(i * 35, 0, toolBar);
                         fullscrn = fullScreenToolStripMenuItem.Visible;
                         if (fullScreenToolStripMenuItem.Visible == true)
                         {
-                            fullscreen.Click += new EventHandler(fullScreenToolStripMenuItem_Click);
+                            fullscreen.Click += new EventHandler(FullScreenToolStripMenuItem_Click);
                             fullscreen.BackgroundImage = Resources.FullScreen;
                             toolTip.SetToolTip(fullscreen, "Full Screen");
                         }
                         else
                         {
-                            fullscreen.Click += new EventHandler(exitFullScreenToolStripMenuItem_Click);
+                            fullscreen.Click += new EventHandler(ExitFullScreenToolStripMenuItem_Click);
                             fullscreen.BackgroundImage = Resources.ExitFullScreen;
                             toolTip.SetToolTip(fullscreen, "Exit Full Screen");
                         }
 
                         i++;
 
-                        Button zoomin = popButton(i * 35, 0, toolBar);
+                        Button zoomin = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(zoomin, "Zoom In");
-                        zoomin.Click += new EventHandler(zoomInToolStripMenuItem_Click);
+                        zoomin.Click += new EventHandler(ZoomInToolStripMenuItem_Click);
                         zoomin.Enabled = zoomInToolStripMenuItem.Enabled;
                         if (zoomin.Enabled)
                             zoomin.BackgroundImage = Resources.ZoomIn_active;
@@ -2940,9 +2987,9 @@ namespace Project
                             zoomin.BackgroundImage = Resources.ZoomIn_inactive;
                         i++;
 
-                        Button zoomout = popButton(i * 35, 0, toolBar);
+                        Button zoomout = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(zoomout, "Zoom Out");
-                        zoomout.Click += new EventHandler(zoomOutToolStripMenuItem_Click);
+                        zoomout.Click += new EventHandler(ZoomOutToolStripMenuItem_Click);
                         zoomout.Enabled = zoomOutToolStripMenuItem.Enabled;
                         if (zoomout.Enabled)
                             zoomout.BackgroundImage = Resources.ZoomOut_active;
@@ -2950,9 +2997,9 @@ namespace Project
                             zoomout.BackgroundImage = Resources.ZoomOut_inactive;
                         i++;
 
-                        Button fit = popButton(i * 35, 0, toolBar);
+                        Button fit = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(fit, "Fit On Screen");
-                        fit.Click += new EventHandler(fitOnScreenToolStripMenuItem_Click);
+                        fit.Click += new EventHandler(FitOnScreenToolStripMenuItem_Click);
                         fit.Enabled = fitOnScreenToolStripMenuItem.Enabled;
                         if (fit.Enabled)
                             fit.BackgroundImage = Resources.FitOnScreen_active;
@@ -2964,9 +3011,9 @@ namespace Project
 
                 case 4:
                     {
-                        Button selectAll = popButton(i * 35, 0, toolBar);
+                        Button selectAll = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(selectAll, "Select All");
-                        selectAll.Click += new EventHandler(allToolStripMenuItem_Click);
+                        selectAll.Click += new EventHandler(AllToolStripMenuItem_Click);
                         selectAll.Enabled = allToolStripMenuItem.Enabled;
                         if (selectAll.Enabled)
                             selectAll.BackgroundImage = Resources.SelectAll_active;
@@ -2974,9 +3021,9 @@ namespace Project
                             selectAll.BackgroundImage = Resources.SelectAll_inactive;
                         i++;
 
-                        Button deselect = popButton(i * 35, 0, toolBar);
+                        Button deselect = PopButton(i * 35, 0, toolBar);
                         toolTip.SetToolTip(deselect, "Deselect");
-                        deselect.Click += new EventHandler(deselectToolStripMenuItem_Click);
+                        deselect.Click += new EventHandler(DeselectToolStripMenuItem_Click);
                         deselect.Enabled = deselectToolStripMenuItem.Enabled;
                         if (deselect.Enabled)
                             deselect.BackgroundImage = Resources.Deselect_active;
@@ -2987,7 +3034,7 @@ namespace Project
             }
         }
 
-        private void saveToolStripMenuItem1_EnabledChanged(object sender, EventArgs e)
+        private void SaveToolStripMenuItem1_EnabledChanged(object sender, EventArgs e)
         {
             //if (activeToolBar == 0)
             //{
@@ -2999,7 +3046,7 @@ namespace Project
             //}
         }
 
-        private void saveAsToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void SaveAsToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 0)
             {
@@ -3011,7 +3058,7 @@ namespace Project
             }
         }
 
-        private void closeToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void CloseToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 0)
             {
@@ -3023,7 +3070,7 @@ namespace Project
             }
         }
 
-        private void printToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void PrintToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             //if (activeToolBar == 0)
             //{
@@ -3035,7 +3082,7 @@ namespace Project
             //}
         }
 
-        private void copyToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void CopyToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 1)
             {
@@ -3047,7 +3094,7 @@ namespace Project
             }
         }
 
-        private void cutToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void CutToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             //    if (activeToolBar == 1)
             //    {
@@ -3059,7 +3106,7 @@ namespace Project
             //    }
         }
 
-        private void pasteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void PasteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 1)
             {
@@ -3071,7 +3118,7 @@ namespace Project
             }
         }
 
-        private void deleteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void DeleteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 1)
             {
@@ -3083,7 +3130,7 @@ namespace Project
             }
         }
 
-        private void cropToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void CropToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 1)
             {
@@ -3095,26 +3142,26 @@ namespace Project
             }
         }
 
-        private void exitfullScreenToolStripMenuItem_VisibleChanged(object sender, EventArgs e)
+        private void ExitfullScreenToolStripMenuItem_VisibleChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 2)
             {
                 if (fullscrn)
                 {
-                    toolBar.Controls[0].Click -= exitFullScreenToolStripMenuItem_Click;
-                    toolBar.Controls[0].Click += fullScreenToolStripMenuItem_Click;
+                    toolBar.Controls[0].Click -= ExitFullScreenToolStripMenuItem_Click;
+                    toolBar.Controls[0].Click += FullScreenToolStripMenuItem_Click;
                     toolBar.Controls[0].BackgroundImage = Resources.FullScreen;
                 }
                 else
                 {
-                    toolBar.Controls[0].Click -= fullScreenToolStripMenuItem_Click;
-                    toolBar.Controls[0].Click += exitFullScreenToolStripMenuItem_Click;
+                    toolBar.Controls[0].Click -= FullScreenToolStripMenuItem_Click;
+                    toolBar.Controls[0].Click += ExitFullScreenToolStripMenuItem_Click;
                     toolBar.Controls[0].BackgroundImage = Resources.ExitFullScreen;
                 }
             }
         }
 
-        private void allToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void AllToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 3)
             {
@@ -3126,18 +3173,18 @@ namespace Project
             }
         }
 
-        private void revertToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RevertToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
                 workArea.Image = original;
         }
 
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            reviewForm();
+            ReviewForm();
         }
 
-        private void deselectToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
+        private void DeselectToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 3)
             {
@@ -3154,35 +3201,35 @@ namespace Project
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.N)
-                newAction();
+                NewAction();
             if (e.Control && e.KeyCode == Keys.O)
-                openAction();
+                OpenAction();
             if (e.Control && e.KeyCode == Keys.Shift && e.KeyCode == Keys.S)
-                saveAsAction();               
+                SaveAsAction();               
             if (e.KeyData == Keys.Delete)
-                deleteAction();
+                DeleteAction();
             if (e.Control && e.KeyCode == Keys.C)
                 if (copyToolStripMenuItem.Enabled)
                     if(mod==0)
-                        copyAction();
+                        CopyAction();
                     else
                     {
                         copiedImage = new Bitmap(((PictureBox)elements[index]).Image);
                     }
             if (e.Control && e.KeyCode == Keys.X)
                 if (cutToolStripMenuItem.Enabled)
-                    cutAction();
+                    CutAction();
             if (e.Control && e.KeyCode == Keys.V)
                 if (pasteToolStripMenuItem.Enabled)
-                    pasteAction();
+                    PasteAction();
             if (e.Control && e.KeyCode == Keys.F)
-                fullScreenAction();
+                FullScreenAction();
             if (e.Control && e.KeyCode == Keys.Oemplus)
-                zoomInAction();
+                ZoomInAction();
             if (e.Control && e.KeyCode == Keys.OemMinus)
-                zoomOutAction();
+                ZoomOutAction();
             if (e.Control && e.KeyCode == Keys.A)
-                allAction();
+                AllAction();
         }
 
         #endregion
@@ -3190,7 +3237,7 @@ namespace Project
 
     
 
-    public class displayPanel : Panel
+    public class DisplayPanel : Panel
     {
         protected override void OnMouseWheel(MouseEventArgs e)
         {
@@ -3222,18 +3269,18 @@ namespace Project
 
         public Shape(Point start, Point end,Control parent)
         {
-            Rectangle drawingLimits = createRectangle(start, end);
+            Rectangle drawingLimits = CreateRectangle(start, end);
             parent.Controls.Add(this);
             this.BringToFront();
             this.Size = new Size(drawingLimits.Width, drawingLimits.Height);
             this.Location = new Point(drawingLimits.X + parent.Controls[parent.Controls.Count-1].Left, drawingLimits.Y + parent.Controls[parent.Controls.Count - 1].Top);
 
-            this.MouseDown += new MouseEventHandler(move_MouseDown);
-            this.MouseMove += new MouseEventHandler(move_MouseMove);
-            this.MouseUp += new MouseEventHandler(move_MouseUp);
+            this.MouseDown += new MouseEventHandler(Move_MouseDown);
+            this.MouseMove += new MouseEventHandler(Move_MouseMove);
+            this.MouseUp += new MouseEventHandler(Move_MouseUp);
         }
 
-        private void move_MouseUp(object sender, MouseEventArgs e)
+        private void Move_MouseUp(object sender, MouseEventArgs e)
         {
             dragShape = false;
             transformShape = false;
@@ -3241,18 +3288,18 @@ namespace Project
             moveNewPosition = Point.Empty;
         }
 
-        private void move_MouseMove(object sender, MouseEventArgs e)
+        private void Move_MouseMove(object sender, MouseEventArgs e)
         {
             if (!dragShape)
             {
                 finalPosition = e.Location;
-                changeTransformCursors((Shape)sender);
+                ChangeTransformCursors((Shape)sender);
             }
             if (dragShape && e.Button == MouseButtons.Left)
             {
                 if (transformShape&&((Control)sender).Focused)
                 {
-                    transformSelection(e.Location, ((Shape)sender));
+                    TransformSelection(e.Location, ((Shape)sender));
                 }
                 else
                 {
@@ -3269,7 +3316,7 @@ namespace Project
             }
         }
 
-        private void changeTransformCursors(Shape sender)
+        private void ChangeTransformCursors(Shape sender)
         {
             transformShape = true;
             if ((finalPosition.X < resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X > sender.Width - resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
@@ -3300,7 +3347,7 @@ namespace Project
             }
         }
 
-        private void transformSelection(Point location, Shape sender)
+        private void TransformSelection(Point location, Shape sender)
         {
             moveNewPosition = Point.Empty;
             moveNewPosition.X = location.X - initialPosition.X;
@@ -3358,19 +3405,19 @@ namespace Project
             }
         }
 
-        private void move_MouseDown(object sender, MouseEventArgs e)
+        private void Move_MouseDown(object sender, MouseEventArgs e)
         {
             ((Control)sender).Focus();
             dragShape = true;
             initialPosition = e.Location;
-            draggingShape = new Thread(dragPicture);
+            draggingShape = new Thread(DragPicture);
             draggingShape.Start();
             initialSize = ((Shape)sender).Size;
             ((Control)sender).BringToFront();
            // ((Shape)sender).BringToFront();
         }
 
-        private void dragPicture()
+        private void DragPicture()
         {
             timerMove.Start();
             do
@@ -3381,7 +3428,7 @@ namespace Project
             timerMove.Reset();
         }
 
-        private Rectangle createRectangle(Point start, Point end)
+        private Rectangle CreateRectangle(Point start, Point end)
         {
             Rectangle r = new Rectangle();
 
@@ -3408,7 +3455,7 @@ namespace Project
             return r;
         }
 
-        protected void message(string x)
+        protected void Message(string x)
         {
             MessageBox.Show(x);
         }
@@ -3420,14 +3467,14 @@ namespace Project
     {
         public DrawRectangle(Point start, Point end, Control parent): base(start,end,parent)
         {
-            setRectangleColor(Color.Black, this);
-            rectangleProperties(this.FindForm().Controls[4], this);
+            SetRectangleColor(Color.Black, this);
+            RectangleProperties(this.FindForm().Controls[4], this);
 
-            this.MouseDown += new MouseEventHandler(rectangle_MouseClick);
-            this.SizeChanged += new EventHandler(rectangle_SizeChanged);
+            this.MouseDown += new MouseEventHandler(Rectangle_MouseClick);
+            this.SizeChanged += new EventHandler(Rectangle_SizeChanged);
         }
 
-        private void rectangle_SizeChanged(object sender, EventArgs e)
+        private void Rectangle_SizeChanged(object sender, EventArgs e)
         {
             //schimba height
             this.FindForm().Controls[4].Controls[1].Text = this.Height.ToString();
@@ -3435,85 +3482,93 @@ namespace Project
             this.FindForm().Controls[4].Controls[3].Text = this.Width.ToString();
         }
 
-        private void rectangle_MouseClick(object sender, MouseEventArgs e)
+        private void Rectangle_MouseClick(object sender, MouseEventArgs e)
         {
             ((Control)sender).Focus();
             Control parent = ((DrawRectangle)sender).FindForm().Controls[4];
             parent.Controls.Clear();
-            rectangleProperties(parent, (Control)sender);
+            RectangleProperties(parent, (Control)sender);
         }
 
-        private void rectangleProperties(Control parent, Control sender)
+        private void RectangleProperties(Control parent, Control sender)
         {
-            Label height = new Label();
-            height.Size = new Size(50, 30);
-            height.Text = "Height:";
+            Label height = new Label
+            {
+                Size = new Size(50, 30),
+                Text = "Height:"
+            };
             parent.Controls.Add(height);
 
-            TextBox heightText = new TextBox();
-            heightText.Size = new Size(50, 30);
-            heightText.Text = sender.Height.ToString();
-            heightText.Location = new Point(height.Location.X + height.Width + 5, height.Location.Y);
-            heightText.TextChanged += new EventHandler(heightText_TextChanged);
+            System.Windows.Forms.TextBox heightText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = sender.Height.ToString(),
+                Location = new Point(height.Location.X + height.Width + 5, height.Location.Y)
+            };
+            heightText.TextChanged += new EventHandler(HeightText_TextChanged);
             parent.Controls.Add(heightText);
 
-            Label width = new Label();
-            width.Size = new Size(50, 30);
-            width.Location = new Point(height.Location.X, height.Location.Y + height.Height + 5);
-            width.Text = "Width:";
+            Label width = new Label
+            {
+                Size = new Size(50, 30),
+                Location = new Point(height.Location.X, height.Location.Y + height.Height + 5),
+                Text = "Width:"
+            };
             parent.Controls.Add(width);
 
-            TextBox widthText = new TextBox();
-            widthText.Size = new Size(50, 30);
-            widthText.Text = sender.Width.ToString();
-            widthText.Location = new Point(width.Location.X + width.Width + 5, width.Height);
-            widthText.TextChanged += new EventHandler(widthText_TextChanged);
+            System.Windows.Forms.TextBox widthText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = sender.Width.ToString(),
+                Location = new Point(width.Location.X + width.Width + 5, width.Height)
+            };
+            widthText.TextChanged += new EventHandler(WidthText_TextChanged);
             parent.Controls.Add(widthText);
 
-            noFocusBorderButton colorSwitch = new noFocusBorderButton();
+            NoFocusBorderButton colorSwitch = new NoFocusBorderButton();
             parent.Controls.Add(colorSwitch);
             colorSwitch.BackColor = ((PictureBox)sender).BackColor;
             colorSwitch.Size = new Size(30, 30);
             colorSwitch.Location = new Point(width.Location.X, width.Location.Y + width.Height + 5);
-            colorSwitch.Click += new EventHandler(color_Clicked);
+            colorSwitch.Click += new EventHandler(Color_Clicked);
         }
 
-        private void heightText_TextChanged(object sender, EventArgs e)
+        private void HeightText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                this.Height = Convert.ToInt32(((TextBox)sender).Text);
+                this.Height = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
             }
             catch (Exception)
             {
-                message("Invalid height! Try again.");
+                Message("Invalid height! Try again.");
             }
         }
 
-        private void widthText_TextChanged(object sender, EventArgs e)
+        private void WidthText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                this.Width = Convert.ToInt32(((TextBox)sender).Text);
+                this.Width = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
             }
             catch (Exception)
             {
-                message("Invalid width! Try again.");
+                Message("Invalid width! Try again.");
             }
         }
 
-        private void color_Clicked(object sender, EventArgs e)
+        private void Color_Clicked(object sender, EventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
             if (colorPicker.ShowDialog() == DialogResult.OK)
             {
                 ((Button)sender).BackColor = colorPicker.Color;
-                setRectangleColor(colorPicker.Color, this);
+                SetRectangleColor(colorPicker.Color, this);
 
             }
         }
 
-        private void setRectangleColor(Color col, PictureBox rectangle)
+        private void SetRectangleColor(Color col, PictureBox rectangle)
         {
             Bitmap bmp = new Bitmap(rectangle.Width, rectangle.Height);
             using (Graphics g = Graphics.FromImage(bmp))
@@ -3535,14 +3590,14 @@ namespace Project
         Color color=Color.Black;
         public DrawEllipse(Point start,Point end, Control parent):base(start,end,parent)
             {
-            setEllipseColor(Color.Black, this);
-            ellipseProperties(this.FindForm().Controls[4], this);
+            SetEllipseColor(Color.Black, this);
+            EllipseProperties(this.FindForm().Controls[4], this);
 
-            this.MouseDown += new MouseEventHandler(rectangle_MouseClick);
-            this.SizeChanged += new EventHandler(rectangle_SizeChanged);
+            this.MouseDown += new MouseEventHandler(Rectangle_MouseClick);
+            this.SizeChanged += new EventHandler(Rectangle_SizeChanged);
         }
 
-        private void rectangle_SizeChanged(object sender, EventArgs e)
+        private void Rectangle_SizeChanged(object sender, EventArgs e)
         {
             //schimba height
             this.FindForm().Controls[4].Controls[1].Text = this.Height.ToString();
@@ -3550,87 +3605,95 @@ namespace Project
             this.FindForm().Controls[4].Controls[3].Text = this.Width.ToString();
         }
 
-        private void rectangle_MouseClick(object sender, MouseEventArgs e)
+        private void Rectangle_MouseClick(object sender, MouseEventArgs e)
         {
             ((Control)sender).Focus();
             Control parent = ((DrawEllipse)sender).FindForm().Controls[4];
             parent.Controls.Clear();
-            ellipseProperties(parent, (Control)sender);
+            EllipseProperties(parent, (Control)sender);
         }
 
-        private void ellipseProperties(Control parent, Control sender)
+        private void EllipseProperties(Control parent, Control sender)
         {
-            Label height = new Label();
-            height.Size = new Size(50, 30);
-            height.Text = "Height:";
+            Label height = new Label
+            {
+                Size = new Size(50, 30),
+                Text = "Height:"
+            };
             parent.Controls.Add(height);
 
-            TextBox heightText = new TextBox();
-            heightText.Size = new Size(50, 30);
-            heightText.Text = sender.Height.ToString();
-            heightText.Location = new Point(height.Location.X + height.Width + 5, height.Location.Y);
-            heightText.TextChanged += new EventHandler(heightText_TextChanged);
+            System.Windows.Forms.TextBox heightText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = sender.Height.ToString(),
+                Location = new Point(height.Location.X + height.Width + 5, height.Location.Y)
+            };
+            heightText.TextChanged += new EventHandler(HeightText_TextChanged);
             parent.Controls.Add(heightText);
 
-            Label width = new Label();
-            width.Size = new Size(50, 30);
-            width.Location = new Point(height.Location.X, height.Location.Y + height.Height + 5);
-            width.Text = "Width:";
+            Label width = new Label
+            {
+                Size = new Size(50, 30),
+                Location = new Point(height.Location.X, height.Location.Y + height.Height + 5),
+                Text = "Width:"
+            };
             parent.Controls.Add(width);
 
-            TextBox widthText = new TextBox();
-            widthText.Size = new Size(50, 30);
-            widthText.Text = sender.Width.ToString();
-            widthText.Location = new Point(width.Location.X + width.Width + 5, width.Height);
-            widthText.TextChanged += new EventHandler(widthText_TextChanged);
+            System.Windows.Forms.TextBox widthText = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 30),
+                Text = sender.Width.ToString(),
+                Location = new Point(width.Location.X + width.Width + 5, width.Height)
+            };
+            widthText.TextChanged += new EventHandler(WidthText_TextChanged);
             parent.Controls.Add(widthText);
 
-            noFocusBorderButton colorSwitch = new noFocusBorderButton();
+            NoFocusBorderButton colorSwitch = new NoFocusBorderButton();
             parent.Controls.Add(colorSwitch);
             colorSwitch.BackColor = color;
             colorSwitch.Size = new Size(30, 30);
             colorSwitch.Location = new Point(width.Location.X, width.Location.Y + width.Height + 5);
-            colorSwitch.Click += new EventHandler(color_Clicked);
+            colorSwitch.Click += new EventHandler(Color_Clicked);
         }
 
-        private void heightText_TextChanged(object sender, EventArgs e)
+        private void HeightText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                this.Height = Convert.ToInt32(((TextBox)sender).Text);
-                setEllipseColor(color, this);
+                this.Height = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
+                SetEllipseColor(color, this);
             }
             catch (Exception)
             {
-                message("Invalid height! Try again.");
+                Message("Invalid height! Try again.");
             }
         }
 
-        private void widthText_TextChanged(object sender, EventArgs e)
+        private void WidthText_TextChanged(object sender, EventArgs e)
         {
             try
             {
-                this.Width = Convert.ToInt32(((TextBox)sender).Text);
-                setEllipseColor(color, this);
+                this.Width = Convert.ToInt32(((System.Windows.Forms.TextBox)sender).Text);
+                SetEllipseColor(color, this);
             }
             catch (Exception)
             {
-                message("Invalid width! Try again.");
+                Message("Invalid width! Try again.");
             }
         }
 
-        private void color_Clicked(object sender, EventArgs e)
+        private void Color_Clicked(object sender, EventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
             if (colorPicker.ShowDialog() == DialogResult.OK)
             {
                 ((Button)sender).BackColor = colorPicker.Color;
-                setEllipseColor(colorPicker.Color, this);
+                SetEllipseColor(colorPicker.Color, this);
                 color = colorPicker.Color;
             }
         }
 
-        private void setEllipseColor(Color col, PictureBox rectangle)
+        private void SetEllipseColor(Color col, PictureBox rectangle)
         {
             Bitmap bmp = new Bitmap(rectangle.Width, rectangle.Height);
             using (Graphics g = Graphics.FromImage(bmp))
@@ -3648,7 +3711,7 @@ namespace Project
     #endregion
 
     #region TEXTBOX
-    public class textBox : RichTextBox
+    public class TextBoxTool : RichTextBox
     {
         int resizingEdge = 8;
 
@@ -3671,46 +3734,46 @@ namespace Project
         public Color hoverColor = Color.FromArgb(92, 139, 139);
         public Color idleColor = Color.FromArgb(102, 153, 153);
 
-        public textBox(Point location, Size size, Control parent)
+        public TextBoxTool(Point location, Size size, Control parent)
         {
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             this.SetStyle(ControlStyles.Opaque, true);
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
-            this.TextChanged += textBox_TextChanged;
+            this.TextChanged += TextBox_TextChanged;
             this.BackColor = Color.Transparent;
             this.ScrollBars = RichTextBoxScrollBars.None;
             parent.Controls.Add(this);
             this.Location = location;
             this.Size = size;
             this.BringToFront();
-            this.MouseDown += textBox_MouseDown;
-            this.MouseMove += textBox_MouseMove;
-            this.MouseClick += textBox_Click;
-            this.MouseUp += textBox_MouseUp;
-            this.GotFocus += textBox_GotFocus;
+            this.MouseDown += TextBox_MouseDown;
+            this.MouseMove += TextBox_MouseMove;
+            this.MouseClick += TextBox_Click;
+            this.MouseUp += TextBox_MouseUp;
+            this.GotFocus += TextBox_GotFocus;
         }
 
-        public textBox(Rectangle box, Control parent)
+        public TextBoxTool(Rectangle box, Control parent)
         {
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             this.SetStyle(ControlStyles.Opaque, true);
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
-            this.TextChanged += textBox_TextChanged;
+            this.TextChanged += TextBox_TextChanged;
             this.BackColor = Color.Transparent;
             this.ScrollBars = RichTextBoxScrollBars.None;
             parent.Controls.Add(this);
             this.Location = box.Location;
             this.Size = box.Size;
             this.BringToFront();
-            this.MouseDown += textBox_MouseDown;
-            this.MouseMove += textBox_MouseMove;
-            this.MouseClick += textBox_Click;
-            this.MouseUp += textBox_MouseUp;
-            this.GotFocus += textBox_GotFocus;
-            this.LostFocus += textBox_LostFocus;
+            this.MouseDown += TextBox_MouseDown;
+            this.MouseMove += TextBox_MouseMove;
+            this.MouseClick += TextBox_Click;
+            this.MouseUp += TextBox_MouseUp;
+            this.GotFocus += TextBox_GotFocus;
+            this.LostFocus += TextBox_LostFocus;
         }
 
-        private void textBox_TextChanged(object sender, EventArgs e)
+        private void TextBox_TextChanged(object sender, EventArgs e)
         {
             this.ForceRefresh();
         }
@@ -3735,23 +3798,23 @@ namespace Project
             this.UpdateStyles();
         }
 
-        private void textBox_MouseDown(object sender, MouseEventArgs e)
+        private void TextBox_MouseDown(object sender, MouseEventArgs e)
         {
             dragTextBox = true;
             initialPosition = e.Location;
-            draggingText = new Thread(dragText);
+            draggingText = new Thread(DragText);
             draggingText.Start();
-            initialSize = ((textBox)sender).Size;
-            ((textBox)sender).BringToFront();
+            initialSize = ((TextBoxTool)sender).Size;
+            ((TextBoxTool)sender).BringToFront();
         }
 
-        private void textBox_MouseMove(object sender, MouseEventArgs e)
+        private void TextBox_MouseMove(object sender, MouseEventArgs e)
         {
             if (!dragTextBox)
             {
                 finalPosition = e.Location;
                 //if (((PictureBox)sender).Equals(copy))
-                changeTransformCursors((textBox)sender);
+                ChangeTransformCursors((TextBoxTool)sender);
                 //else
                 //    ((PictureBox)sender).Cursor = Cursors.Default;
             }
@@ -3759,7 +3822,7 @@ namespace Project
             {
                 if (transformTextBox)
                 {
-                    transformSelection(e.Location, ((textBox)sender));
+                    TransformSelection(e.Location, ((TextBoxTool)sender));
                 }
                 else
                 {
@@ -3768,15 +3831,15 @@ namespace Project
                     moveNewPosition.Y = e.Y - initialPosition.Y;
                     if (timerMove.ElapsedMilliseconds > 30)
                     {
-                        ((textBox)sender).Left += moveNewPosition.X;
-                        ((textBox)sender).Top += moveNewPosition.Y;
+                        ((TextBoxTool)sender).Left += moveNewPosition.X;
+                        ((TextBoxTool)sender).Top += moveNewPosition.Y;
                     }
                 }
 
             }
         }
 
-        private void textBox_MouseUp(object sender, MouseEventArgs e)
+        private void TextBox_MouseUp(object sender, MouseEventArgs e)
         {
             dragTextBox = false;
             transformTextBox = false;
@@ -3784,17 +3847,17 @@ namespace Project
             moveNewPosition = Point.Empty;
         }
 
-        public void raiseEventsStatus(bool newStatus)
+        public void RaiseEventsStatus(bool newStatus)
         {
             raiseEvents = newStatus;
         }
 
-        private void textBox_Click(object sender, MouseEventArgs e)
+        private void TextBox_Click(object sender, MouseEventArgs e)
         {
             this.ForceRefresh();
         }
 
-        private void transformSelection(Point location, textBox sender)
+        private void TransformSelection(Point location, TextBoxTool sender)
         {
             moveNewPosition = Point.Empty;
             moveNewPosition.X = location.X - initialPosition.X;
@@ -3852,7 +3915,7 @@ namespace Project
             }
         }
 
-        private void changeTransformCursors(textBox sender)
+        private void ChangeTransformCursors(TextBoxTool sender)
         {
             transformTextBox = true;
             if ((finalPosition.X < resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X > sender.Width - resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
@@ -3883,7 +3946,7 @@ namespace Project
             }
         }
 
-        private void dragText()
+        private void DragText()
         {
             timerMove.Start();
             do
@@ -3896,17 +3959,17 @@ namespace Project
             timerMove.Reset();
         }
 
-        private void textBox_GotFocus(object sender, EventArgs e)
+        private void TextBox_GotFocus(object sender, EventArgs e)
         {
             if (raiseEvents)
             {           
-                Control parent = ((textBox)sender).FindForm().Controls[4];
+                Control parent = ((TextBoxTool)sender).FindForm().Controls[4];
                 parent.Controls.Clear();
-                textBox_Properties(parent, (Control)sender);
+                TextBox_Properties(parent, (Control)sender);
             }
         }
 
-        private int get_fontIndex(Control box)
+        private int Get_fontIndex(Control box)
         {
             List<string> fontlist = new List<string>();
             foreach (FontFamily font in FontFamily.Families)
@@ -3922,7 +3985,7 @@ namespace Project
             return -1;
         }
 
-        private void textBox_Properties(Control parent, Control sender)
+        private void TextBox_Properties(Control parent, Control sender)
         {
             List<string> fontlist = new List<string>();
             foreach (FontFamily font in FontFamily.Families)
@@ -3935,57 +3998,59 @@ namespace Project
             fonts.Size = new Size(fonts.Width + 80, fonts.Height);
             fonts.DataSource = fontlist;
             parent.Controls.Add(fonts);
-            fonts.SelectedIndex = get_fontIndex(sender);
-            fonts.SelectedIndexChanged += new EventHandler(fonts_SelectedIndexChanged);
+            fonts.SelectedIndex = Get_fontIndex(sender);
+            fonts.SelectedIndexChanged += new EventHandler(Fonts_SelectedIndexChanged);
 
-            TextBox size = new TextBox();
-            size.Size = new Size(50, 50);
+            System.Windows.Forms.TextBox size = new System.Windows.Forms.TextBox
+            {
+                Size = new Size(50, 50)
+            };
             parent.Controls.Add(size);
             size.Location = new Point(fonts.Location.X + fonts.Width + 5, fonts.Location.Y);
             size.Visible = true;
             size.Text = sender.Font.Size + "";
-            size.LostFocus += new EventHandler(size_LostFocus);
-            size.KeyDown += new KeyEventHandler(size_KeyDown);
+            size.LostFocus += new EventHandler(Size_LostFocus);
+            size.KeyDown += new KeyEventHandler(Size_KeyDown);
 
-            noFocusBorderButton bold = new noFocusBorderButton();
+            NoFocusBorderButton bold = new NoFocusBorderButton();
             parent.Controls.Add(bold);
             bold.Size = new Size(30, 30);
             bold.FlatStyle = FlatStyle.Flat;
             bold.FlatAppearance.BorderSize = 0;
             bold.BackgroundImage = Resources.Bold;
             bold.Location = new Point(fonts.Location.X, fonts.Location.Y + fonts.Height + 5);
-            bold.Click += new EventHandler(style_Clicked);
+            bold.Click += new EventHandler(Style_Clicked);
             bold.BackColor = idleColor;
 
-            noFocusBorderButton italic = new noFocusBorderButton();
+            NoFocusBorderButton italic = new NoFocusBorderButton();
             parent.Controls.Add(italic);
             italic.Size = new Size(30, 30);
             italic.FlatStyle = FlatStyle.Flat;
             italic.FlatAppearance.BorderSize = 0;
             italic.BackgroundImage = Resources.Italic;
             italic.Location = new Point(bold.Location.X + bold.Width + 5, bold.Location.Y);
-            italic.Click += new EventHandler(style_Clicked);
+            italic.Click += new EventHandler(Style_Clicked);
             italic.BackColor = idleColor;
 
-            noFocusBorderButton underline = new noFocusBorderButton();
+            NoFocusBorderButton underline = new NoFocusBorderButton();
             parent.Controls.Add(underline);
             underline.Size = new Size(30, 30);
             underline.FlatStyle = FlatStyle.Flat;
             underline.FlatAppearance.BorderSize = 0;
             underline.BackgroundImage = Resources.Underline;
             underline.Location = new Point(italic.Location.X + italic.Width + 5, italic.Location.Y);
-            underline.Click += new EventHandler(style_Clicked);
+            underline.Click += new EventHandler(Style_Clicked);
             underline.BackColor = idleColor;
 
-            noFocusBorderButton colorSwitch = new noFocusBorderButton();
+            NoFocusBorderButton colorSwitch = new NoFocusBorderButton();
             parent.Controls.Add(colorSwitch);
             colorSwitch.Size = new Size(30, 30);
             colorSwitch.Location = new Point(size.Location.X, size.Location.Y + size.Height + 5);
-            colorSwitch.Click += new EventHandler(color_Clicked);
+            colorSwitch.Click += new EventHandler(Color_Clicked);
             colorSwitch.BackColor = this.ForeColor;
         }
 
-        private void color_Clicked(object sender, EventArgs e)
+        private void Color_Clicked(object sender, EventArgs e)
         {
             ColorDialog colorPicker = new ColorDialog();
             raiseEvents = false;
@@ -3996,7 +4061,7 @@ namespace Project
             raiseEvents = true;
         }
 
-        private void update_FontStyle(object sender)
+        private void Update_FontStyle(object sender)
         {
             Control caller = (Control)sender;
 
@@ -4040,7 +4105,7 @@ namespace Project
             
         }
 
-        private void style_Clicked(object sender, EventArgs e)
+        private void Style_Clicked(object sender, EventArgs e)
         {
             Control caller = (Control)sender;
 
@@ -4049,42 +4114,42 @@ namespace Project
             else
                 caller.BackColor = activeColor;
 
-            update_FontStyle(sender);
+            Update_FontStyle(sender);
         }
 
-        private void size_KeyDown(object sender, KeyEventArgs e)
+        private void Size_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Alt || e.KeyCode == Keys.Enter)
-                this.Font = new Font(this.Font.FontFamily.Name, float.Parse(((TextBox)sender).Text));
-            update_FontStyle(sender);
+                this.Font = new Font(Font.FontFamily.Name, float.Parse(((System.Windows.Forms.TextBox)sender).Text));
+            Update_FontStyle(sender);
         }
 
-        private void size_LostFocus(object sender, EventArgs e)
+        private void Size_LostFocus(object sender, EventArgs e)
         {
-            this.Font = new Font(this.Font.FontFamily.Name, float.Parse(((TextBox)sender).Text));
-            update_FontStyle(sender);
+            this.Font = new Font(Font.FontFamily.Name, float.Parse(((System.Windows.Forms.TextBox)sender).Text));
+            Update_FontStyle(sender);
         }
 
-        private void fonts_SelectedIndexChanged(object sender, EventArgs e)
+        private void Fonts_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.Font = new Font(((ComboBox)sender).SelectedItem.ToString(), this.Font.Size);
-            update_FontStyle(sender);
+            Update_FontStyle(sender);
         }
 
-        private void textBox_LostFocus(object sender, EventArgs e)
+        private void TextBox_LostFocus(object sender, EventArgs e)
         {
             if (raiseEvents)
             {
-                Control parent = ((textBox)sender).FindForm().Controls[4];
+                Control parent = ((TextBoxTool)sender).FindForm().Controls[4];
                 parent.Controls.Clear();
             }
         }
     }
     #endregion
 
-    public class noFocusBorderButton : Button
+    public class NoFocusBorderButton : Button
     {
-        public noFocusBorderButton() : base()
+        public NoFocusBorderButton() : base()
         {
             this.SetStyle(ControlStyles.Selectable, false);
         }
