@@ -118,7 +118,6 @@ namespace Project
         
         private void ReviewForm()
         {
-            // Form f = popForm("Feedback/ Bug Report", 500, 700);
             Form f = new Form
             {
                 Text = "Feedback/ Bug Report",
@@ -135,6 +134,7 @@ namespace Project
 
             f.ShowDialog();
         }
+
         private void ReviewForm(object exception)
         {
             Form f = new Form
@@ -142,6 +142,7 @@ namespace Project
                 Text = "Crash Report",
                 Size = new Size(500, 700)
             };
+
             Label name_lb = PopLabel(150, 50, "Display name: ", f);
             TextBox name = PopText(250, 50, f);
             Label message_lb = PopLabel(100, 100, "Please describe what were you doing when the crash occured:", f);
@@ -555,7 +556,7 @@ namespace Project
         #endregion
 
         #region SAVE
-        private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //to be implemented
         }
@@ -968,7 +969,7 @@ namespace Project
             this.FormBorderStyle = FormBorderStyle.Sizable;
             this.WindowState = FormWindowState.Normal;
             fullScreenToolStripMenuItem.Visible = true;
-            fullscreen = true;
+            fullscreenVisible = true;
             exitFullScreenToolStripMenuItem.Visible = false;
         }
         
@@ -1089,257 +1090,169 @@ namespace Project
             {
                 case 0:
                     {
-                        Button New = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(New, "New");
-                        New.Click += new EventHandler(NewToolStripMenuItem_Click);
-                        New.BackgroundImage = Resources.New;
-                        i++;
+                        CustomizeButton(ref i, "New",
+                            new EventHandler(NewToolStripMenuItem_Click),
+                            true,
+                            Resources.New, Resources.New);
 
-                        Button open = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(open, "Open");
-                        open.Click += new EventHandler(OpenToolStripMenuItem_Click);
-                        open.BackgroundImage = Resources.Open;
-                        i++;
+                        CustomizeButton(ref i, "Open",
+                            new EventHandler(OpenToolStripMenuItem_Click),
+                            true,
+                            Resources.Open, Resources.Open);
 
-                        //Button save = popButton(i * 35, 0, toolBar);
-                        //toolTip.SetToolTip(save, "Save");
-                        //save.Click += new EventHandler(saveToolStripMenuItem1_Click);
-                        //save.Enabled = saveAsToolStripMenuItem.Enabled;
-                        //if (save.Enabled)
-                        //    save.BackgroundImage = Resources.Save_active;
-                        //else
-                        //    save.BackgroundImage = Resources.Save_inactive;
-                        //i++;
+                        //CustomizeButton(ref i, "Save",
+                        //    new EventHandler(SaveToolStripMenuItem_Click),
+                        //    saveToolStripMenuItem.Enabled,
+                        //    Resources.Save_active, Resources.Save_inactive);
 
-                        Button saveas = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(saveas, "Save As");
-                        saveas.Click += new EventHandler(SaveAsToolStripMenuItem_Click);
-                        saveas.Enabled = saveAsToolStripMenuItem.Enabled;
-                        if (saveas.Enabled)
-                            saveas.BackgroundImage = Resources.SaveAs_active;
-                        else
-                            saveas.BackgroundImage = Resources.SaveAs_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Save As",
+                            new EventHandler(SaveAsToolStripMenuItem_Click),
+                            saveAsToolStripMenuItem.Enabled,
+                            Resources.SaveAs_active, Resources.SaveAs_inactive);
 
-                        Button close = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(close, "Close");
-                        close.Click += new EventHandler(CloseToolStripMenuItem_Click);
-                        close.Enabled = closeToolStripMenuItem.Enabled;
-                        if (close.Enabled)
-                            close.BackgroundImage = Resources.Close_active;
-                        else
-                            close.BackgroundImage = Resources.Close_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Close",
+                            new EventHandler(CloseToolStripMenuItem_Click),
+                            closeToolStripMenuItem.Enabled,
+                            Resources.Close_active, Resources.Close_inactive);
 
-                        //Button print = popButton(i * 35, 0, toolBar);
-                        //toolTip.SetToolTip(print, "Print");
-                        //print.Click += new EventHandler(printToolStripMenuItem_Click);
-                        //print.Enabled = printToolStripMenuItem.Enabled;
-                        //if (print.Enabled)
-                        //    print.BackgroundImage = Resources.Print_active;
-                        //else
-                        //    print.BackgroundImage = Resources.Print_inactive;
-                        //i++;
+                        //CustomizeButton(ref i, "Print",
+                        //    new EventHandler(PrintToolStripMenuItem_Click),
+                        //    printToolStripMenuItem.Enabled,
+                        //    Resources.Print_active, Resources.Print_inactive);
 
-                        Button exit = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(exit, "Exit");
-                        exit.Click += new EventHandler(ExitToolStripMenuItem_Click);
-                        exit.BackgroundImage = Resources.Exit;
+                        CustomizeButton(ref i, "Exit",
+                            new EventHandler(ExitToolStripMenuItem_Click),
+                            true,
+                            Resources.Exit, Resources.Exit);
 
                         break;
                     }
                 case 1:
                     {
-                        Button copy = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(copy, "Copy");
-                        copy.Click += new EventHandler(CopyToolStripMenuItem_Click);
-                        copy.Enabled = copyToolStripMenuItem.Enabled;
-                        if (copy.Enabled)
-                            copy.BackgroundImage = Resources.Copy_active;
-                        else
-                            copy.BackgroundImage = Resources.Copy_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Copy",
+                            new EventHandler(CopyToolStripMenuItem_Click),
+                            copyToolStripMenuItem.Enabled,
+                            Resources.Copy_active, Resources.Copy_inactive);
 
-                        Button paste = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(paste, "Paste");
-                        paste.Click += new EventHandler(PasteToolStripMenuItem_Click);
-                        paste.Enabled = pasteToolStripMenuItem.Enabled;
-                        if (paste.Enabled)
-                            paste.BackgroundImage = Resources.Paste_active;
-                        else
-                            paste.BackgroundImage = Resources.Paste_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Cut",
+                            new EventHandler(CutToolStripMenuItem_Click),
+                            cutToolStripMenuItem.Enabled,
+                            Resources.Cut, Resources.Cut);
 
-                        Button delete = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(delete, "Delete");
-                        delete.Click += new EventHandler(DeleteToolStripMenuItem_Click);
-                        delete.Enabled = deleteToolStripMenuItem.Enabled;
-                        if (delete.Enabled)
-                            delete.BackgroundImage = Resources.Delete_active;
-                        else
-                            delete.BackgroundImage = Resources.Delete_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Paste",
+                            new EventHandler(PasteToolStripMenuItem_Click),
+                            pasteToolStripMenuItem.Enabled,
+                            Resources.Paste_active, Resources.Paste_inactive);
 
-                        Button crop = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(crop, "Crop");
-                        crop.Click += new EventHandler(CropToolStripMenuItem_Click);
-                        crop.Enabled = cropToolStripMenuItem.Enabled;
-                        if (crop.Enabled)
-                            crop.BackgroundImage = Resources.Crop_active;
-                        else
-                            crop.BackgroundImage = Resources.Crop_inactive;
+                        CustomizeButton(ref i, "Delete",
+                            new EventHandler(DeleteToolStripMenuItem_Click),
+                            deleteToolStripMenuItem.Enabled,
+                            Resources.Delete_active, Resources.Delete_inactive);
+
+                        CustomizeButton(ref i, "Crop",
+                            new EventHandler(CropToolStripMenuItem_Click),
+                            cropToolStripMenuItem.Enabled,
+                            Resources.Crop_active, Resources.Crop_inactive);
+
                         break;
                     }
                 case 2:
                     {
-                        Button grayscale = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(grayscale, "Grayscale");
-                        grayscale.Click += new EventHandler(GrayscaleToolStripMenuItem_Click);
-                        grayscale.Enabled = grayscaleToolStripMenuItem.Enabled;
-                        grayscale.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Grayscale",
+                            new EventHandler(GrayscaleToolStripMenuItem_Click),
+                            grayscaleToolStripMenuItem.Enabled,
+                            Resources.Grayscale, Resources.Grayscale);
 
-                        Button sepia = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(sepia, "Sepia");
-                        sepia.Click += new EventHandler(SepiaToolStripMenuItem_Click);
-                        sepia.Enabled = sepiaToolStripMenuItem.Enabled;
-                        if (sepia.Enabled)
-                            sepia.BackgroundImage = Resources.Sepia_active;
-                        else
-                            sepia.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Sepia",
+                            new EventHandler(SepiaToolStripMenuItem_Click),
+                            sepiaToolStripMenuItem.Enabled,
+                            Resources.Sepia_active, Resources.Grayscale);
 
-                        Button red = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(red, "Red Filter");
-                        red.Click += new EventHandler(RedFilterToolStripMenuItem_Click);
-                        red.Enabled = redFilterToolStripMenuItem.Enabled;
-                        if (red.Enabled)
-                            red.BackgroundImage = Resources.RedFilter_active;
-                        else
-                            red.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Red Filter",
+                            new EventHandler(RedFilterToolStripMenuItem_Click),
+                            redFilterToolStripMenuItem.Enabled,
+                            Resources.RedFilter_active, Resources.Grayscale);
 
-                        Button green = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(green, "Green Filter");
-                        green.Click += new EventHandler(GreenFilterToolStripMenuItem_Click);
-                        green.Enabled = greenFilterToolStripMenuItem.Enabled;
-                        if (green.Enabled)
-                            green.BackgroundImage = Resources.GreenFilter_active;
-                        else
-                            green.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Green Filter",
+                            new EventHandler(GreenFilterToolStripMenuItem_Click),
+                            greenFilterToolStripMenuItem.Enabled,
+                            Resources.GreenFilter_active, Resources.Grayscale);
 
-                        Button blue = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(blue, "Blue Filter");
-                        blue.Click += new EventHandler(BlueFilterToolStripMenuItem_Click);
-                        blue.Enabled = blueFilterToolStripMenuItem.Enabled;
-                        if (blue.Enabled)
-                            blue.BackgroundImage = Resources.BlueFilter_active;
-                        else
-                            blue.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Blue Filter",
+                            new EventHandler(BlueFilterToolStripMenuItem_Click),
+                            blueFilterToolStripMenuItem.Enabled,
+                            Resources.BlueFilter_active, Resources.Grayscale);
 
-                        Button invert = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(invert, "Invert Colors");
-                        invert.Click += new EventHandler(InvertColorsToolStripMenuItem_Click);
-                        invert.Enabled = invertColorsToolStripMenuItem.Enabled;
-                        if (invert.Enabled)
-                            invert.BackgroundImage = Resources.InvertColors;
-                        else
-                            invert.BackgroundImage = Resources.Grayscale;
-                        i++;
+                        CustomizeButton(ref i, "Invert Filter",
+                            new EventHandler(InvertColorsToolStripMenuItem_Click),
+                            invertColorsToolStripMenuItem.Enabled,
+                            Resources.InvertColors, Resources.Grayscale);
 
-                        Button original = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(original, "Revert to Original");
-                        original.Click += new EventHandler(RevertToOriginalToolStripMenuItem_Click);
-                        original.Enabled = revertToOriginalToolStripMenuItem.Enabled;
-                        if (original.Enabled)
-                            original.BackgroundImage = Resources.RevertToOriginal_active;
-                        else
-                            original.BackgroundImage = Resources.RevertToOriginal_inactive;
+                        CustomizeButton(ref i, "Revert to Original",
+                            new EventHandler(RevertToOriginalToolStripMenuItem_Click),
+                            revertToOriginalToolStripMenuItem.Enabled,
+                            Resources.RevertToOriginal_active, Resources.RevertToOriginal_inactive);
+
                         break;
                     }
                 case 3:
                     {
-                        Button fullscreen = PopButton(i * 35, 0, toolBar);
-                        this.fullscreen = fullScreenToolStripMenuItem.Visible;
-                        if (fullScreenToolStripMenuItem.Visible == true)
+                        fullscreenVisible = fullScreenToolStripMenuItem.Visible;
+                        if (fullscreenVisible)
                         {
-                            fullscreen.Click += new EventHandler(FullScreenToolStripMenuItem_Click);
-                            fullscreen.BackgroundImage = Resources.FullScreen;
-                            toolTip.SetToolTip(fullscreen, "Full Screen");
+                            CustomizeButton(ref i, "Full Screen",
+                                new EventHandler(FullScreenToolStripMenuItem_Click),
+                                true,
+                                Resources.FullScreen, Resources.FullScreen);
                         }
                         else
                         {
-                            fullscreen.Click += new EventHandler(ExitFullScreenToolStripMenuItem_Click);
-                            fullscreen.BackgroundImage = Resources.ExitFullScreen;
-                            toolTip.SetToolTip(fullscreen, "Exit Full Screen");
+                            CustomizeButton(ref i, "Exit Full Screen",
+                                new EventHandler(ExitFullScreenToolStripMenuItem_Click),
+                                true,
+                                Resources.ExitFullScreen, Resources.ExitFullScreen);
                         }
 
-                        i++;
+                        CustomizeButton(ref i, "Zoom In",
+                            new EventHandler(ZoomInToolStripMenuItem_Click),
+                            zoomInToolStripMenuItem.Enabled,
+                            Resources.ZoomIn_active, Resources.ZoomIn_inactive);
 
-                        Button zoomin = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(zoomin, "Zoom In");
-                        zoomin.Click += new EventHandler(ZoomInToolStripMenuItem_Click);
-                        zoomin.Enabled = zoomInToolStripMenuItem.Enabled;
-                        if (zoomin.Enabled)
-                            zoomin.BackgroundImage = Resources.ZoomIn_active;
-                        else
-                            zoomin.BackgroundImage = Resources.ZoomIn_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Zoom Out",
+                            new EventHandler(ZoomOutToolStripMenuItem_Click),
+                            zoomOutToolStripMenuItem.Enabled,
+                            Resources.ZoomOut_active, Resources.ZoomOut_inactive);
 
-                        Button zoomout = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(zoomout, "Zoom Out");
-                        zoomout.Click += new EventHandler(ZoomOutToolStripMenuItem_Click);
-                        zoomout.Enabled = zoomOutToolStripMenuItem.Enabled;
-                        if (zoomout.Enabled)
-                            zoomout.BackgroundImage = Resources.ZoomOut_active;
-                        else
-                            zoomout.BackgroundImage = Resources.ZoomOut_inactive;
-                        i++;
-
-                        Button fit = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(fit, "Fit On Screen");
-                        fit.Click += new EventHandler(FitOnScreenToolStripMenuItem_Click);
-                        fit.Enabled = fitOnScreenToolStripMenuItem.Enabled;
-                        if (fit.Enabled)
-                            fit.BackgroundImage = Resources.FitOnScreen_active;
-                        else
-                            fit.BackgroundImage = Resources.FitOnScreen_inactive;
+                        CustomizeButton(ref i, "Fit On Screen",
+                            new EventHandler(FitOnScreenToolStripMenuItem_Click),
+                            fitOnScreenToolStripMenuItem.Enabled,
+                            Resources.FitOnScreen_active, Resources.FitOnScreen_active);
 
                         break;
                     }
 
                 case 4:
                     {
-                        Button selectAll = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(selectAll, "Select All");
-                        selectAll.Click += new EventHandler(AllToolStripMenuItem_Click);
-                        selectAll.Enabled = allToolStripMenuItem.Enabled;
-                        if (selectAll.Enabled)
-                            selectAll.BackgroundImage = Resources.SelectAll_active;
-                        else
-                            selectAll.BackgroundImage = Resources.SelectAll_inactive;
-                        i++;
+                        CustomizeButton(ref i, "Select All",
+                            new EventHandler(AllToolStripMenuItem_Click),
+                            allToolStripMenuItem.Enabled,
+                            Resources.SelectAll_active, Resources.SelectAll_inactive);
 
-                        Button deselect = PopButton(i * 35, 0, toolBar);
-                        toolTip.SetToolTip(deselect, "Deselect");
-                        deselect.Click += new EventHandler(DeselectToolStripMenuItem_Click);
-                        deselect.Enabled = deselectToolStripMenuItem.Enabled;
-                        if (deselect.Enabled)
-                            deselect.BackgroundImage = Resources.Deselect_active;
-                        else
-                            deselect.BackgroundImage = Resources.Deselect_inactive;
+                        CustomizeButton(ref i, "Deselect",
+                            new EventHandler(DeselectToolStripMenuItem_Click),
+                            deselectToolStripMenuItem.Enabled,
+                            Resources.Deselect_active, Resources.Deselect_inactive);
+
                         break;
                     }
             }
         }
 
-        private void SaveToolStripMenuItem1_EnabledChanged(object sender, EventArgs e)
+        private void SaveToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             //if (activeToolBar == 0)
             //{
-            //    toolBar.Controls[2].Enabled = saveToolStripMenuItem1.Enabled;
+            //    toolBar.Controls[2].Enabled = saveToolStripMenuItem.Enabled;
             //    if (toolBar.Controls[2].Enabled)
             //        toolBar.Controls[2].BackgroundImage = Resources.Save_active;
             //    else
@@ -1447,7 +1360,7 @@ namespace Project
         {
             if (activeToolBar == 2)
             {
-                if (fullscreen)
+                if (fullscreenVisible)
                 {
                     toolBar.Controls[0].Click -= ExitFullScreenToolStripMenuItem_Click;
                     toolBar.Controls[0].Click += FullScreenToolStripMenuItem_Click;

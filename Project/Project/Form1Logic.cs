@@ -30,7 +30,7 @@ namespace Project
         bool drawingActive = false;
         bool mouseDown = false;
         bool selectingActive = false;
-        bool fullscreen;
+        bool fullscreenVisible;
 
         public Stopwatch timerMove;
 
@@ -605,7 +605,7 @@ namespace Project
         {
             closeToolStripMenuItem.Enabled = active;
             saveAsToolStripMenuItem.Enabled = active;
-            saveToolStripMenuItem1.Enabled = active;
+            saveToolStripMenuItem.Enabled = active;
             printToolStripMenuItem.Enabled = active;
             zoomInToolStripMenuItem.Enabled = active;
             zoomOutToolStripMenuItem.Enabled = active;
@@ -1486,7 +1486,7 @@ namespace Project
             this.FormBorderStyle = FormBorderStyle.None;
             this.WindowState = FormWindowState.Maximized;
             fullScreenToolStripMenuItem.Visible = false;
-            fullscreen = false;
+            fullscreenVisible = false;
             exitFullScreenToolStripMenuItem.Visible = true;
         }
 
@@ -1675,6 +1675,19 @@ namespace Project
             bt.BackColor = idleColor;
             f.Controls.Add(bt);
             return bt;
+        }
+
+        private void CustomizeButton(ref int i, String buttonTypeName, EventHandler eventFunction, bool buttonEnable, Bitmap buttonActive, Bitmap buttonInactive)
+        {
+            Button newButton = PopButton(i * 35, 0, toolBar);
+            toolTip.SetToolTip(newButton, buttonTypeName);
+            newButton.Click += eventFunction;
+            newButton.Enabled = buttonEnable;
+            if (newButton.Enabled)
+                newButton.BackgroundImage = buttonActive;
+            else
+                newButton.BackgroundImage = buttonInactive;
+            i++;
         }
 
         private void ToolBar_Reset()
