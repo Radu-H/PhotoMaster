@@ -1310,25 +1310,25 @@ namespace Project
 
         private void CutToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            //if (activeToolBar == 1)
-            //{
-            //    toolBar.Controls[0].Enabled = cutToolStripMenuItem.Enabled;
-            //    if (toolBar.Controls[0].Enabled)
-            //        toolBar.Controls[0].BackgroundImage = Resources.Cut;
-            //    else
-            //        toolBar.Controls[0].BackgroundImage = Resources.Cut;
-            //}
+            if (activeToolBar == 1)
+            {
+                toolBar.Controls[1].Enabled = cutToolStripMenuItem.Enabled;
+                if (toolBar.Controls[1].Enabled)
+                    toolBar.Controls[1].BackgroundImage = Resources.Cut;
+                else
+                    toolBar.Controls[1].BackgroundImage = Resources.Cut;
+            }
         }
 
         private void PasteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
             if (activeToolBar == 1)
             {
-                toolBar.Controls[1].Enabled = pasteToolStripMenuItem.Enabled;
-                if (toolBar.Controls[1].Enabled)
-                    toolBar.Controls[1].BackgroundImage = Resources.Paste_active;
+                toolBar.Controls[2].Enabled = pasteToolStripMenuItem.Enabled;
+                if (toolBar.Controls[2].Enabled)
+                    toolBar.Controls[2].BackgroundImage = Resources.Paste_active;
                 else
-                    toolBar.Controls[1].BackgroundImage = Resources.Paste_inactive;
+                    toolBar.Controls[2].BackgroundImage = Resources.Paste_inactive;
             }
         }
 
@@ -1336,11 +1336,11 @@ namespace Project
         {
             if (activeToolBar == 1)
             {
-                toolBar.Controls[2].Enabled = deleteToolStripMenuItem.Enabled;
-                if (toolBar.Controls[2].Enabled)
-                    toolBar.Controls[2].BackgroundImage = Resources.Delete_active;
+                toolBar.Controls[3].Enabled = deleteToolStripMenuItem.Enabled;
+                if (toolBar.Controls[3].Enabled)
+                    toolBar.Controls[3].BackgroundImage = Resources.Delete_active;
                 else
-                    toolBar.Controls[2].BackgroundImage = Resources.Delete_inactive;
+                    toolBar.Controls[3].BackgroundImage = Resources.Delete_inactive;
             }
         }
 
@@ -1348,11 +1348,11 @@ namespace Project
         {
             if (activeToolBar == 1)
             {
-                toolBar.Controls[3].Enabled = cropToolStripMenuItem.Enabled;
-                if (toolBar.Controls[3].Enabled)
-                    toolBar.Controls[3].BackgroundImage = Resources.Crop_active;
+                toolBar.Controls[4].Enabled = cropToolStripMenuItem.Enabled;
+                if (toolBar.Controls[4].Enabled)
+                    toolBar.Controls[4].BackgroundImage = Resources.Crop_active;
                 else
-                    toolBar.Controls[3].BackgroundImage = Resources.Crop_inactive;
+                    toolBar.Controls[4].BackgroundImage = Resources.Crop_inactive;
             }
         }
 
