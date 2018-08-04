@@ -181,15 +181,23 @@ namespace Project
         private void Properties_MouseEnter(object sender, EventArgs e)
         {
             if (index > -1)
+            {
                 if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+                {
                     ((TextBoxTool)elements[index]).RaiseEventsStatus(true);
+                }
+            }
         }
 
         private void Properties_MouseLeave(object sender, EventArgs e)
         {
             if (index > -1)
+            {
                 if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+                {
                     ((TextBoxTool)elements[index]).RaiseEventsStatus(false);
+                }
+            }
         }
 
         private void WorkArea_Size(object sender, EventArgs e)
@@ -445,12 +453,15 @@ namespace Project
         private void Tool_Clicked(object sender, EventArgs e)
         {
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
                 {
                     SelectingActive = false;
                     selectionBox.Invalidate();
                     TextBoxRefresh();
                 }
+            }
+
             if (((Button)sender).BackColor == activeColor)
             {
                 ((Button)sender).BackColor = idleColor;
@@ -527,7 +538,9 @@ namespace Project
             Button buttonClicked = sender as Button;
 
             if (((Button)sender).Parent.FindForm().Controls[1].Text.Length <= 0)
+            {
                 Message("Insert a project name");
+            }
             else
             {
                 Title = ((Button)sender).Parent.FindForm().Controls[1].Text;
@@ -576,8 +589,9 @@ namespace Project
             if (!((System.Windows.Forms.TextBox)sender).Text.EndsWith("." + GetCheckedType((GroupBox)(((System.Windows.Forms.TextBox)sender).Parent.Controls[6]))))
             {
                 if (((System.Windows.Forms.TextBox)sender).Text.LastIndexOf(".") > -1)
+                {
                     ((System.Windows.Forms.TextBox)sender).Text = ((System.Windows.Forms.TextBox)sender).Text.Substring(0, ((System.Windows.Forms.TextBox)sender).Text.LastIndexOf("."));
-                ((System.Windows.Forms.TextBox)sender).Text += GetCheckedType((GroupBox)(((System.Windows.Forms.TextBox)sender).Parent.Controls[6]));
+                } ((System.Windows.Forms.TextBox)sender).Text += GetCheckedType((GroupBox)(((System.Windows.Forms.TextBox)sender).Parent.Controls[6]));
             }
             ((System.Windows.Forms.TextBox)sender).TextChanged += Fname_TextChanged;
             ((System.Windows.Forms.TextBox)sender).SelectionStart = i;
@@ -601,13 +615,19 @@ namespace Project
             foreach (Control obj in elements)
             {
                 if (obj.GetType().Equals(typeof(PictureBox)))
+                {
                     g.DrawImage(((PictureBox)obj).Image, (int)((((PictureBox)obj).Location.X - workArea.Location.X) * workArea.Image.Width / workArea.Width), (int)((((PictureBox)obj).Location.Y - workArea.Location.Y) * workArea.Image.Height / workArea.Height), ((PictureBox)obj).Width * workArea.Image.Width / workArea.Width, ((PictureBox)obj).Height * workArea.Image.Height / workArea.Height);
+                }
 
                 if (obj.GetType().Equals(typeof(DrawRectangle)))
+                {
                     g.DrawImage(((DrawRectangle)obj).Image, (int)((((DrawRectangle)obj).Location.X - workArea.Location.X) * workArea.Image.Width / workArea.Width), (int)((((DrawRectangle)obj).Location.Y - workArea.Location.Y) * workArea.Image.Height / workArea.Height), ((DrawRectangle)obj).Width * workArea.Image.Width / workArea.Width, ((DrawRectangle)obj).Height * workArea.Image.Height / workArea.Height);
+                }
 
                 if (obj.GetType().Equals(typeof(DrawEllipse)))
+                {
                     g.DrawImage(((DrawEllipse)obj).Image, (int)((((DrawEllipse)obj).Location.X - workArea.Location.X) * workArea.Image.Width / workArea.Width), (int)((((DrawEllipse)obj).Location.Y - workArea.Location.Y) * workArea.Image.Height / workArea.Height), ((DrawEllipse)obj).Width * workArea.Image.Width / workArea.Width, ((DrawEllipse)obj).Height * workArea.Image.Height / workArea.Height);
+                }
 
                 if (obj.GetType().Equals(typeof(TextBoxTool)))
                 {
@@ -633,16 +653,21 @@ namespace Project
                 }
             }
             else
+            {
                 Message("Choose a valid file format!");
-
+            }
         }
 
         private void SaveType_Changed(object sender, EventArgs e)
         {
             if (((RadioButton)sender).Parent.FindForm().Controls[4].Text.Contains("."))
+            {
                 ((RadioButton)sender).Parent.FindForm().Controls[4].Text = ((RadioButton)sender).Parent.FindForm().Controls[4].Text.Substring(0, ((RadioButton)sender).Parent.FindForm().Controls[4].Text.IndexOf('.')) + ((RadioButton)sender).Text;
+            }
             else
+            {
                 ((RadioButton)sender).Parent.FindForm().Controls[4].Text += ((RadioButton)sender).Text;
+            }
         }
         #endregion
 
@@ -668,12 +693,20 @@ namespace Project
             this.Text = this.Text.Substring(0, this.Text.IndexOf('-') - 1);
             Initialise_workArea();
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
+                {
                     SelectingActive = false;
+                }
+            }
 
             if (drag == true)
+            {
                 if (dragging.IsAlive == true)
+                {
                     drag = false;
+                }
+            }
 
             selectionBox.Invalidate();
             workArea.Visible = false;
@@ -852,7 +885,10 @@ namespace Project
         private void Move_MouseDown(object sender, MouseEventArgs e)
         {
             if (elements[index].GetType().Equals(typeof(TextBoxTool)))
+            {
                 ((TextBoxTool)elements[index]).LoseFocus((Control)sender);
+            }
+
             index = elements.IndexOf(sender as Control);
             drag = true;
             movePosition = e.Location;
@@ -901,9 +937,13 @@ namespace Project
                 {
                     transformPosition = e.Location;
                     if (((PictureBox)sender).Equals(copy))
+                    {
                         ChangeTransformCursors();
+                    }
                     else
+                    {
                         ((PictureBox)sender).Cursor = Cursors.Default;
+                    }
                 }
             }
         }
@@ -922,37 +962,49 @@ namespace Project
         private void GrayscaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 GrayscaleThread(workArea);
+            }
         }
         
         private void RedFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 RedFilterThread(workArea);
+            }
         }
 
         private void GreenFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 GreenFilterThread(workArea);
+            }
         }
 
         private void BlueFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 BlueFilterThread(workArea);
+            }
         }
         
         private void InvertColorsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 InvertThread(workArea);
+            }
         }
         
         private void SepiaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 SepiaThread(workArea);
+            }
         }
         
         #endregion
@@ -961,16 +1013,12 @@ namespace Project
         
         private void FullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FullScreenAction();
+            FullScreenAction(FormBorderStyle.None, FormWindowState.Maximized, false);
         }
 
         private void ExitFullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.FormBorderStyle = FormBorderStyle.Sizable;
-            this.WindowState = FormWindowState.Normal;
-            fullScreenToolStripMenuItem.Visible = true;
-            fullscreenVisible = true;
-            exitFullScreenToolStripMenuItem.Visible = false;
+            FullScreenAction(FormBorderStyle.Sizable, FormWindowState.Normal, true);
         }
         
         private void ZoomInToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1003,7 +1051,10 @@ namespace Project
         private void DeselectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SelectingActive == true)
+            {
                 SelectingActive = false;
+            }
+
             selectionBox.Invalidate();
             TextBoxRefresh();
         }
@@ -1035,10 +1086,14 @@ namespace Project
             }
 
             if (workArea.Width > display.ClientSize.Width)
+            {
                 workArea.Left = 0;
+            }
 
             if (workArea.Height > display.ClientSize.Height)
+            {
                 workArea.Top = 0;
+            }
 
             display.AutoScrollPosition = new Point(xi, yi);
         }
@@ -1046,12 +1101,20 @@ namespace Project
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
+                {
                     SelectingActive = false;
+                }
+            }
 
             if (drag == true)
+            {
                 if (dragging.IsAlive == true)
+                {
                     drag = false;
+                }
+            }
         }
 
         private void Tool_MouseEnter(object sender, EventArgs e)
@@ -1059,12 +1122,18 @@ namespace Project
             if (((Button)sender).Parent == toolBox)
             {
                 if (((Button)sender).BackColor != activeColor)
+                {
                     ((Button)sender).BackColor = hoverColor;
+                }
                 else
+                {
                     ((Button)sender).BackColor = activeColor;
+                }
             }
             else
+            {
                 ((Button)sender).BackColor = hoverColor;
+            }
         }
 
         private void Tool_MouseLeave(object sender, EventArgs e)
@@ -1072,12 +1141,18 @@ namespace Project
             if (((Button)sender).Parent == toolBox)
             {
                 if (((Button)sender).BackColor != activeColor)
+                {
                     ((Button)sender).BackColor = idleColor;
+                }
                 else
+                {
                     ((Button)sender).BackColor = activeColor;
+                }
             }
             else
+            {
                 ((Button)sender).BackColor = idleColor;
+            }
         }
         
         private void ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1250,110 +1325,47 @@ namespace Project
 
         private void SaveToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            //if (activeToolBar == 0)
-            //{
-            //    toolBar.Controls[2].Enabled = saveToolStripMenuItem.Enabled;
-            //    if (toolBar.Controls[2].Enabled)
-            //        toolBar.Controls[2].BackgroundImage = Resources.Save_active;
-            //    else
-            //        toolBar.Controls[2].BackgroundImage = Resources.Save_inactive;
-            //}
+            //ToolBarControlEnabledChange(0, 2, saveToolStripMenuItem.Enabled, Resources.Save_active, Resources.Save_inactive);
         }
 
         private void SaveAsToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 0)
-            {
-                toolBar.Controls[2].Enabled = saveAsToolStripMenuItem.Enabled;
-                if (toolBar.Controls[2].Enabled)
-                    toolBar.Controls[2].BackgroundImage = Resources.SaveAs_active;
-                else
-                    toolBar.Controls[2].BackgroundImage = Resources.SaveAs_inactive;
-            }
+            ToolBarControlEnabledChange(0, 2, saveAsToolStripMenuItem.Enabled, Resources.SaveAs_active, Resources.SaveAs_inactive);
         }
 
         private void CloseToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 0)
-            {
-                toolBar.Controls[3].Enabled = closeToolStripMenuItem.Enabled;
-                if (toolBar.Controls[3].Enabled)
-                    toolBar.Controls[3].BackgroundImage = Resources.Close_active;
-                else
-                    toolBar.Controls[3].BackgroundImage = Resources.Close_inactive;
-            }
+            ToolBarControlEnabledChange(0, 3, closeToolStripMenuItem.Enabled, Resources.Close_active, Resources.Close_inactive);
         }
 
         private void PrintToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            //if (activeToolBar == 0)
-            //{
-            //    toolBar.Controls[5].Enabled = printToolStripMenuItem.Enabled;
-            //    if (toolBar.Controls[5].Enabled)
-            //        toolBar.Controls[5].BackgroundImage = Resources.Print_active;
-            //    else
-            //        toolBar.Controls[5].BackgroundImage = Resources.Print_inactive;
-            //}
+            //ToolBarControlEnabledChange(0, 5, printToolStripMenuItem.Enabled, Resources.Print_active, Resources.Print_inactive);
         }
 
         private void CopyToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 1)
-            {
-                toolBar.Controls[0].Enabled = copyToolStripMenuItem.Enabled;
-                if (toolBar.Controls[0].Enabled)
-                    toolBar.Controls[0].BackgroundImage = Resources.Copy_active;
-                else
-                    toolBar.Controls[0].BackgroundImage = Resources.Copy_inactive;
-            }
+            ToolBarControlEnabledChange(1, 0, copyToolStripMenuItem.Enabled, Resources.Copy_active, Resources.Copy_inactive);
         }
 
         private void CutToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 1)
-            {
-                toolBar.Controls[1].Enabled = cutToolStripMenuItem.Enabled;
-                if (toolBar.Controls[1].Enabled)
-                    toolBar.Controls[1].BackgroundImage = Resources.Cut;
-                else
-                    toolBar.Controls[1].BackgroundImage = Resources.Cut;
-            }
+            ToolBarControlEnabledChange(1, 1, cutToolStripMenuItem.Enabled, Resources.Cut, Resources.Cut);
         }
 
         private void PasteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 1)
-            {
-                toolBar.Controls[2].Enabled = pasteToolStripMenuItem.Enabled;
-                if (toolBar.Controls[2].Enabled)
-                    toolBar.Controls[2].BackgroundImage = Resources.Paste_active;
-                else
-                    toolBar.Controls[2].BackgroundImage = Resources.Paste_inactive;
-            }
+            ToolBarControlEnabledChange(1, 2, pasteToolStripMenuItem.Enabled, Resources.Paste_active, Resources.Paste_inactive);
         }
 
         private void DeleteToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 1)
-            {
-                toolBar.Controls[3].Enabled = deleteToolStripMenuItem.Enabled;
-                if (toolBar.Controls[3].Enabled)
-                    toolBar.Controls[3].BackgroundImage = Resources.Delete_active;
-                else
-                    toolBar.Controls[3].BackgroundImage = Resources.Delete_inactive;
-            }
+            ToolBarControlEnabledChange(1, 3, deleteToolStripMenuItem.Enabled, Resources.Delete_active, Resources.Delete_inactive);
         }
 
         private void CropToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 1)
-            {
-                toolBar.Controls[4].Enabled = cropToolStripMenuItem.Enabled;
-                if (toolBar.Controls[4].Enabled)
-                    toolBar.Controls[4].BackgroundImage = Resources.Crop_active;
-                else
-                    toolBar.Controls[4].BackgroundImage = Resources.Crop_inactive;
-            }
+            ToolBarControlEnabledChange(1, 4, cropToolStripMenuItem.Enabled, Resources.Crop_active, Resources.Crop_inactive);
         }
 
         private void ExitfullScreenToolStripMenuItem_VisibleChanged(object sender, EventArgs e)
@@ -1377,20 +1389,15 @@ namespace Project
 
         private void AllToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 3)
-            {
-                toolBar.Controls[0].Enabled = allToolStripMenuItem.Enabled;
-                if (toolBar.Controls[0].Enabled)
-                    toolBar.Controls[0].BackgroundImage = Resources.SelectAll_active;
-                else
-                    toolBar.Controls[0].BackgroundImage = Resources.SelectAll_inactive;
-            }
+            ToolBarControlEnabledChange(3, 0, allToolStripMenuItem.Enabled, Resources.SelectAll_active, Resources.SelectAll_inactive);
         }
 
         private void RevertToOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (workArea.Enabled)
+            {
                 workArea.Image = original;
+            }
         }
 
         private void HelpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1400,14 +1407,7 @@ namespace Project
 
         private void DeselectToolStripMenuItem_EnabledChanged(object sender, EventArgs e)
         {
-            if (activeToolBar == 3)
-            {
-                toolBar.Controls[1].Enabled = deselectToolStripMenuItem.Enabled;
-                if (toolBar.Controls[1].Enabled)
-                    toolBar.Controls[1].BackgroundImage = Resources.Deselect_active;
-                else
-                    toolBar.Controls[1].BackgroundImage = Resources.Deselect_inactive;
-            }
+            ToolBarControlEnabledChange(3, 1, deselectToolStripMenuItem.Enabled, Resources.Deselect_active, Resources.Deselect_inactive);
         }
 
         #region SHORTCUTS
@@ -1415,35 +1415,75 @@ namespace Project
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.N)
+            {
                 NewAction();
+            }
+
             if (e.Control && e.KeyCode == Keys.O)
+            {
                 OpenAction();
+            }
+
             if (e.Control && e.KeyCode == Keys.Shift && e.KeyCode == Keys.S)
-                SaveAsAction();               
+            {
+                SaveAsAction();
+            }
+
             if (e.KeyData == Keys.Delete)
+            {
                 DeleteAction();
+            }
+
             if (e.Control && e.KeyCode == Keys.C)
+            {
                 if (copyToolStripMenuItem.Enabled)
-                    if(mode==0)
+                {
+                    if (mode==0)
+                    {
                         CopyAction();
+                    }
                     else
                     {
                         copiedImage = new Bitmap(((PictureBox)elements[index]).Image);
                     }
+                }
+            }
+
             if (e.Control && e.KeyCode == Keys.X)
+            {
                 if (cutToolStripMenuItem.Enabled)
+                {
                     CutAction();
+                }
+            }
+
             if (e.Control && e.KeyCode == Keys.V)
+            {
                 if (pasteToolStripMenuItem.Enabled)
+                {
                     PasteAction();
+                }
+            }
+
             if (e.Control && e.KeyCode == Keys.F)
-                FullScreenAction();
+            {
+                FullScreenAction(FormBorderStyle.None, FormWindowState.Maximized, false);
+            }
+
             if (e.Control && e.KeyCode == Keys.Oemplus)
+            {
                 ZoomInAction();
+            }
+
             if (e.Control && e.KeyCode == Keys.OemMinus)
+            {
                 ZoomOutAction();
+            }
+
             if (e.Control && e.KeyCode == Keys.A)
+            {
                 AllAction();
+            }
         }
 
         #endregion

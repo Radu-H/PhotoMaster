@@ -121,9 +121,14 @@ namespace Project
                 DashStyle = DashStyle.DashDot
             };
             if (mode == 0)
+            {
                 g.DrawRectangle(p, r);
+            }
+
             if (mode == 3)
+            {
                 g.DrawEllipse(p, r);
+            }
         }
 
         private void DrawRectangle(Point start, Point end)
@@ -181,9 +186,14 @@ namespace Project
 
                 p.DashStyle = DashStyle.Solid;
                 if (mode == 0)
+                {
                     g.DrawRectangle(p, r);
+                }
+
                 if (mode == 3)
+                {
                     g.DrawEllipse(p, r);
+                }
 
                 Thread.Sleep(1);
 
@@ -288,12 +298,14 @@ namespace Project
             ActivateSelect(false);
             ActivateText(false);
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
                 {
                     SelectingActive = false;
                     selectionBox.Invalidate();
                     TextBoxRefresh();
                 }
+            }
         }
 
         private void DeactivateTools()
@@ -301,12 +313,15 @@ namespace Project
             ActivateSelect(false);
             ActivateText(false);
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
                 {
                     SelectingActive = false;
                     selectionBox.Invalidate();
                     TextBoxRefresh();
                 }
+            }
+
             foreach (Button bt in toolBox.Controls)
             {
                 bt.BackColor = idleColor;
@@ -384,11 +399,14 @@ namespace Project
 
             bool invReq = false;
             foreach (TextBoxTool elm in elements.OfType<TextBoxTool>())
+            {
                 if (elm.InvokeRequired)
                 {
                     invReq = true;
                     break;
                 }
+            }
+
             if (invReq)
             {
                 threadtextboxRefresh callbk = new threadtextboxRefresh(TextBoxRefreshThread);
@@ -521,7 +539,9 @@ namespace Project
                 rb.Click += new System.EventHandler(SaveType_Changed);
                 i++;
                 if (i > 3)
+                {
                     gb.Height += 20;
+                }
             }
             ((RadioButton)gb.Controls[0]).Checked = true;
             f.Controls.Add(gb);
@@ -538,8 +558,12 @@ namespace Project
         private void NewAction()
         {
             if (drag == true)
+            {
                 if (dragging.IsAlive == true)
+                {
                     drag = false;
+                }
+            }
 
             DeactivateTools();
 
@@ -654,13 +678,19 @@ namespace Project
         private void OpenAction()
         {
             if (drag == true)
+            {
                 if (dragging.IsAlive == true)
+                {
                     drag = false;
+                }
+            }
 
             DeactivateTools();
             BrowseImage(workArea);
             if (this.Text.Equals("PhotoMaster"))
+            {
                 this.Text += " - " + Title;
+            }
         }
 
         private void CenterPictureBox()
@@ -707,7 +737,9 @@ namespace Project
             foreach (RadioButton c in gb.Controls)
             {
                 if (c.Checked)
+                {
                     return c.Text;
+                }
             }
             return "";
         }
@@ -719,11 +751,21 @@ namespace Project
         private void CloseApp(object sender, EventArgs e)
         {
             if (SelectingActive == true)
+            {
                 if (selecting.IsAlive == true)
+                {
                     SelectingActive = false;
+                }
+            }
+
             if (drag == true)
+            {
                 if (dragging.IsAlive == true)
+                {
                     drag = false;
+                }
+            }
+
             this.Close();
         }
 
@@ -764,11 +806,14 @@ namespace Project
                 int widthInBytes = bitmapData.Width * bytesPerPixel;
 
                 if (mode == 0)
+                {
                     for (int y = (int)(r.Y * (1.0 * workArea.Image.Height / workArea.Height)); y <= (int)((r.Y + r.Height) * (1.0 * workArea.Image.Height / workArea.Height)); y++)
+                    {
                         if (y >= 0 && y < cut.Height)
                         {
                             int currentLine = y * bitmapData.Stride;
                             for (int x = (int)(r.X * (1.0 * workArea.Image.Width / workArea.Width)) * bytesPerPixel; x <= (int)((r.X + r.Width) * (1.0 * workArea.Image.Width / workArea.Width)) * bytesPerPixel; x += bytesPerPixel)
+                            {
                                 if (x >= 0 && x < cut.Width * bytesPerPixel)
                                 {
                                     pixels[currentLine + x] = 0;
@@ -776,17 +821,23 @@ namespace Project
                                     pixels[currentLine + x + 2] = 0;
                                     pixels[currentLine + x + 3] = 0;
                                 }
+                            }
                         }
+                    }
+                }
+
                 if (mode == 3)
                 {
                     Point scaledX = new Point((int)(selectStart.X * (1.0 * workArea.Image.Width / workArea.Width)), (int)(selectStart.Y * (1.0 * workArea.Image.Height / workArea.Height)));
                     Point scaledY = new Point((int)(selectEnd.X * (1.0 * workArea.Image.Width / workArea.Width)), (int)(selectEnd.Y * (1.0 * workArea.Image.Height / workArea.Height)));
                     Rectangle rscaled = CreateRectangle(scaledX, scaledY);
                     for (int y = (int)(r.Y * (1.0 * workArea.Image.Height / workArea.Height)); y <= (int)((r.Y + r.Height) * (1.0 * workArea.Image.Height / workArea.Height)); y++)
+                    {
                         if (y >= 0 && y < cut.Height)
                         {
                             int currentLine = y * bitmapData.Stride;
                             for (int x = (int)(r.X * (1.0 * workArea.Image.Width / workArea.Width)) * bytesPerPixel; x <= (int)((r.X + r.Width) * (1.0 * workArea.Image.Width / workArea.Width)) * bytesPerPixel; x += bytesPerPixel)
+                            {
                                 if (PointInEllipse(x / bytesPerPixel, y, rscaled) && (x >= 0 && x < cut.Width * bytesPerPixel))
                                 {
                                     pixels[currentLine + x] = 0;
@@ -794,7 +845,9 @@ namespace Project
                                     pixels[currentLine + x + 2] = 0;
                                     pixels[currentLine + x + 3] = 0;
                                 }
+                            }
                         }
+                    }
                 }
                 Marshal.Copy(pixels, 0, ptrFirstPixel, pixels.Length);
                 cut.UnlockBits(bitmapData);
@@ -843,7 +896,9 @@ namespace Project
                 elements[index].Dispose();
                 elements.Remove(elements[index]);
                 if (index > 0)
+                {
                     index--;
+                }
             }
         }
 
@@ -940,12 +995,16 @@ namespace Project
             if (copy.Width > copy.Height)
             {
                 if (copy.Height != 0)
+                {
                     ratio = copy.Width / copy.Height;
+                }
             }
             else
             {
                 if (copy.Width != 0)
+                {
                     ratio = copy.Height / copy.Width;
+                }
             }
 
             //top left
@@ -1119,9 +1178,9 @@ namespace Project
             do
             {
                 if (timerMove.ElapsedMilliseconds > 50)
+                {
                     timerMove.Restart();
-
-
+                }
             } while (drag);
             timerMove.Reset();
         }
@@ -1135,7 +1194,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(ConvertGrayscale);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
+            }
         }
 
         delegate void threadPictureRefreshCallBack(PictureBox picture);
@@ -1235,8 +1296,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(RedFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
-
+            }
         }
 
         private void RedFilter(object pic)
@@ -1284,7 +1346,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(GreenFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
+            }
         }
 
         private void GreenFilter(object pic)
@@ -1330,8 +1394,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(BlueFilter);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
-
+            }
         }
 
         private void BlueFilter(object pic)
@@ -1377,8 +1442,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(InvertColors);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
-
+            }
         }
 
         private void InvertColors(object pic)
@@ -1423,8 +1489,9 @@ namespace Project
             ParameterizedThreadStart th = new ParameterizedThreadStart(Sepia);
             Thread convert = new Thread(th);
             if (!convert.IsAlive)
+            {
                 convert.Start(picture);
-
+            }
         }
 
         private void Sepia(object pic)
@@ -1454,14 +1521,33 @@ namespace Project
                     R += 40;
                     G += 20;
 
-                    if (R > 255) R = 255;
-                    if (G > 255) G = 255;
-                    if (B > 255) B = 255;
+                    if (R > 255)
+                    {
+                        R = 255;
+                    }
+
+                    if (G > 255)
+                    {
+                        G = 255;
+                    }
+
+                    if (B > 255)
+                    {
+                        B = 255;
+                    }
 
                     B -= 30;
 
-                    if (B < 0) B = 0;
-                    if (B > 255) B = 255;
+                    if (B < 0)
+                    {
+                        B = 0;
+                    }
+
+                    if (B > 255)
+                    {
+                        B = 255;
+                    }
+
                     pixels[currentLine + x] = (byte)B;
                     pixels[currentLine + x + 1] = (byte)G;
                     pixels[currentLine + x + 2] = (byte)R;
@@ -1481,13 +1567,13 @@ namespace Project
 
         #region VIEW BUTTONS
 
-        private void FullScreenAction()
+        private void FullScreenAction(FormBorderStyle newBorderStyle, FormWindowState formWindowState, bool newFullScreenActive)
         {
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.WindowState = FormWindowState.Maximized;
-            fullScreenToolStripMenuItem.Visible = false;
-            fullscreenVisible = false;
-            exitFullScreenToolStripMenuItem.Visible = true;
+            this.FormBorderStyle = newBorderStyle;
+            this.WindowState = formWindowState;
+            fullscreenVisible = newFullScreenActive;
+            fullScreenToolStripMenuItem.Visible = newFullScreenActive;
+            exitFullScreenToolStripMenuItem.Visible = !newFullScreenActive;
         }
 
         private void ZoomInAction()
@@ -1553,10 +1639,14 @@ namespace Project
             }
 
             if (workArea.Width > display.ClientSize.Width)
+            {
                 workArea.Left = 0;
+            }
 
             if (workArea.Height > display.ClientSize.Height)
+            {
                 workArea.Top = 0;
+            }
 
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) * multiplier + 0.5 * (multiplier - 1) * display.Width), (int)(Math.Abs(y) * multiplier + 0.5 * (multiplier - 1) * display.Height));
         }
@@ -1577,10 +1667,14 @@ namespace Project
             }
 
             if (workArea.Width > display.ClientSize.Width)
+            {
                 workArea.Left = 0;
+            }
 
             if (workArea.Height > display.ClientSize.Height)
+            {
                 workArea.Top = 0;
+            }
 
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) * multiplier - x - scrollhorriz), (int)(Math.Abs(y) * multiplier - y - scrollvert));
         }
@@ -1600,10 +1694,14 @@ namespace Project
             }
 
             if (workArea.Width > display.ClientSize.Width)
+            {
                 workArea.Left = 0;
+            }
 
             if (workArea.Height > display.ClientSize.Height)
+            {
                 workArea.Top = 0;
+            }
 
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) / multiplier - 0.5 * (multiplier - 1) * display.Width), (int)(Math.Abs(y) / multiplier - 0.5 * (multiplier - 1) * display.Height));
         }
@@ -1621,10 +1719,14 @@ namespace Project
             }
 
             if (workArea.Width > display.ClientSize.Width)
+            {
                 workArea.Left = 0;
+            }
 
             if (workArea.Height > display.ClientSize.Height)
+            {
                 workArea.Top = 0;
+            }
 
             display.AutoScrollPosition = new Point((int)(Math.Abs(x) / multiplier - x - scrollhorriz), (int)(Math.Abs(y) / multiplier - y - scrollvert));
         }
@@ -1677,17 +1779,38 @@ namespace Project
             return bt;
         }
 
-        private void CustomizeButton(ref int i, String buttonTypeName, EventHandler eventFunction, bool buttonEnable, Bitmap buttonActive, Bitmap buttonInactive)
+        private void CustomizeButton(ref int i, String buttonTypeName, EventHandler eventFunction, bool buttonEnabled, Bitmap buttonActive, Bitmap buttonInactive)
         {
             Button newButton = PopButton(i * 35, 0, toolBar);
             toolTip.SetToolTip(newButton, buttonTypeName);
             newButton.Click += eventFunction;
-            newButton.Enabled = buttonEnable;
-            if (newButton.Enabled)
+            newButton.Enabled = buttonEnabled;
+            if (buttonEnabled)
+            {
                 newButton.BackgroundImage = buttonActive;
+            }
             else
+            {
                 newButton.BackgroundImage = buttonInactive;
+            }
+
             i++;
+        }
+
+        private void ToolBarControlEnabledChange(int activeToolBarIndex, int buttonIndex, bool buttonEnabled, Bitmap buttonActive, Bitmap buttonInactive)
+        {
+            if (activeToolBar == activeToolBarIndex)
+            {
+                toolBar.Controls[buttonIndex].Enabled = buttonEnabled;
+                if (buttonEnabled)
+                {
+                    toolBar.Controls[buttonIndex].BackgroundImage = buttonActive;
+                }
+                else
+                {
+                    toolBar.Controls[buttonIndex].BackgroundImage = buttonInactive;
+                }
+            }
         }
 
         private void ToolBar_Reset()

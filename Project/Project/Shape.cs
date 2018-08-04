@@ -79,27 +79,38 @@ namespace Project
             if ((finalPosition.X < resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X > sender.Width - resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
             {
                 if (sender.Cursor != Cursors.SizeNWSE)
+                {
                     sender.Cursor = Cursors.SizeNWSE;
+                }
             }
             else if ((finalPosition.X > sender.Width - resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X < resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
             {
                 if (sender.Cursor != Cursors.SizeNESW)
+                {
                     sender.Cursor = Cursors.SizeNESW;
+                }
             }
             else if (finalPosition.X < resizingEdge || finalPosition.X > sender.Width - resizingEdge)
             {
                 if (sender.Cursor != Cursors.SizeWE)
+                {
                     sender.Cursor = Cursors.SizeWE;
+                }
             }
             else if (finalPosition.Y < resizingEdge || finalPosition.Y > sender.Height - resizingEdge)
             {
                 if (sender.Cursor != Cursors.SizeNS)
+                {
                     sender.Cursor = Cursors.SizeNS;
+                }
             }
             else
             {
                 if (sender.Cursor != Cursors.SizeAll)
+                {
                     sender.Cursor = Cursors.SizeAll;
+                }
+
                 transformShape = false;
             }
         }
@@ -180,7 +191,9 @@ namespace Project
             do
             {
                 if (timerMove.ElapsedMilliseconds > 50)
+                {
                     timerMove.Restart();
+                }
             } while (dragShape);
             timerMove.Reset();
         }

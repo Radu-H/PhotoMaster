@@ -218,27 +218,38 @@ namespace Project
             if ((finalPosition.X < resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X > sender.Width - resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
             {
                 if (sender.Cursor != Cursors.SizeNWSE)
+                {
                     sender.Cursor = Cursors.SizeNWSE;
+                }
             }
             else if ((finalPosition.X > sender.Width - resizingEdge && finalPosition.Y < resizingEdge) || (finalPosition.X < resizingEdge && finalPosition.Y > sender.Height - resizingEdge))
             {
                 if (sender.Cursor != Cursors.SizeNESW)
+                {
                     sender.Cursor = Cursors.SizeNESW;
+                }
             }
             else if (finalPosition.X < resizingEdge || finalPosition.X > sender.Width - resizingEdge)
             {
                 if (sender.Cursor != Cursors.SizeWE)
+                {
                     sender.Cursor = Cursors.SizeWE;
+                }
             }
             else if (finalPosition.Y < resizingEdge || finalPosition.Y > sender.Height - resizingEdge)
             {
                 if (sender.Cursor != Cursors.SizeNS)
+                {
                     sender.Cursor = Cursors.SizeNS;
+                }
             }
             else
             {
                 if (sender.Cursor != Cursors.SizeAll)
+                {
                     sender.Cursor = Cursors.SizeAll;
+                }
+
                 transformTextBox = false;
             }
         }
@@ -249,9 +260,9 @@ namespace Project
             do
             {
                 if (timerMove.ElapsedMilliseconds > 50)
+                {
                     timerMove.Restart();
-
-
+                }
             } while (dragTextBox);
             timerMove.Reset();
         }
@@ -277,8 +288,13 @@ namespace Project
                 }
             }
             for (int i = 0; i < fontlist.Count; i++)
+            {
                 if (fontlist[i] == box.Font.FontFamily.Name.ToString())
+                {
                     return i;
+                }
+            }
+
             return -1;
         }
 
@@ -288,7 +304,9 @@ namespace Project
             foreach (FontFamily font in FontFamily.Families)
             {
                 if (font.IsStyleAvailable(FontStyle.Regular))
+                {
                     fontlist.Add(font.Name);
+                }
             }
 
             ComboBox fonts = new ComboBox();
@@ -369,16 +387,24 @@ namespace Project
                 if (caller.Parent.Controls[3].BackColor == activeColor)
                 {
                     if (caller.Parent.Controls[4].BackColor == activeColor)
+                    {
                         newFont = new Font(currentFont, FontStyle.Bold | FontStyle.Italic | FontStyle.Underline);
+                    }
                     else
+                    {
                         newFont = new Font(currentFont, FontStyle.Bold | FontStyle.Italic);
+                    }
                 }
                 else
                 {
                     if (caller.Parent.Controls[4].BackColor == activeColor)
+                    {
                         newFont = new Font(currentFont, FontStyle.Bold | FontStyle.Underline);
+                    }
                     else
+                    {
                         newFont = new Font(currentFont, FontStyle.Bold);
+                    }
                 }
             }
             else
@@ -386,16 +412,24 @@ namespace Project
                 if (caller.Parent.Controls[3].BackColor == activeColor)
                 {
                     if (caller.Parent.Controls[4].BackColor == activeColor)
+                    {
                         newFont = new Font(currentFont, FontStyle.Italic | FontStyle.Underline);
+                    }
                     else
+                    {
                         newFont = new Font(currentFont, FontStyle.Italic);
+                    }
                 }
                 else
                 {
                     if (caller.Parent.Controls[4].BackColor == activeColor)
+                    {
                         newFont = new Font(currentFont, FontStyle.Underline);
+                    }
                     else
+                    {
                         newFont = new Font(currentFont, FontStyle.Regular);
+                    }
                 }
             }
             this.Font = newFont;
@@ -407,9 +441,13 @@ namespace Project
             Control caller = (Control)sender;
 
             if (caller.BackColor == activeColor)
+            {
                 caller.BackColor = idleColor;
+            }
             else
+            {
                 caller.BackColor = activeColor;
+            }
 
             Update_FontStyle(sender);
         }
@@ -417,7 +455,10 @@ namespace Project
         private void Size_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Alt || e.KeyCode == Keys.Enter)
+            {
                 this.Font = new Font(Font.FontFamily.Name, float.Parse(((System.Windows.Forms.TextBox)sender).Text));
+            }
+
             Update_FontStyle(sender);
         }
 
